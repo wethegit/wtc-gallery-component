@@ -200,6 +200,6 @@ class Gallery extends ElementController {
   }
 }
 
-ExecuteControllers.registerController(Gallery);
+ExecuteControllers.registerController(Gallery, 'Gallery');
 
 export default Gallery;
