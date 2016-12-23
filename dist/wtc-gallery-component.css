@@ -1,0 +1,129 @@
+.gallery {
+  position: relative;
+}
+
+.gallery__wrapper {
+  transition: opacity 0.4s ease;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.gallery.is-loading .gallery__wrapper {
+  padding-bottom: 50%;
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+}
+
+.gallery.is-loading .gallery__overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gallery__item {
+  transition: opacity 0.4s ease;
+  transform:  scale(0.9) translateY(-50%);
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+}
+
+.gallery__item img {
+  display: block;
+  max-width: 100%;
+}
+
+.gallery__item.is-transitioning
+{
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.gallery__item.is-transitioning--backward
+{
+  transform: translate(-50%, -50%) rotate(-20deg);
+  opacity: 0;
+}
+
+.gallery__item.is-transitioning--forward
+{
+  transform: translate(50%, -50%) rotate(20deg);
+  opacity: 0;
+}
+
+.gallery__item.is-active {
+  transform: scale(1) translateY(-50%);
+  opacity: 1;
+}
+
+.gallery__overlay {
+  transition: opacity 0.4s ease;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes galleryPreloader {
+  50% {
+    background-color: gray;
+    transform: scaleX(0.1);
+  }
+
+  100% {
+    transform: scaleX(1) rotate(90deg);
+  }
+}
+
+.gallery__overlay::after {
+  content: '';
+  animation: galleryPreloader 1s ease infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background-color: black;
+}
+
+.gallery__nav {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.7);
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+}
+
+.gallery__nav:focus,
+.gallery__nav:active {
+  outline: none;
+}
+
+.gallery__nav:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.gallery__nav-next {
+  right: 10px;
+}
+
+.gallery__nav-prev {
+  left: 10px;
+}
