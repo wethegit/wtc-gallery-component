@@ -17,6 +17,7 @@ class Gallery extends ElementController {
 
     this.options = {
       nav: (this.element.getAttribute('data-nav') == 'true') ? true : false,
+      debug: (this.element.getAttribute('data-debug') == 'true') ? true : false,
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
       onLoad: null,
@@ -70,7 +71,7 @@ class Gallery extends ElementController {
     // preload images if any
     let images = this.wrapper.querySelectorAll('img');
     if (images.length > 0) {
-      let preloader = new Preloader({debug: true});
+      let preloader = new Preloader({debug: this.options.debug});
 
       _u.forEachNode(images, (index, item)=> {
         preloader.add(item.getAttribute('src'), 'image');
