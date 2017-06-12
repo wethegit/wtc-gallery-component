@@ -47,6 +47,7 @@ var Gallery = function (_ElementController) {
 
     _this.options = {
       nav: _this.element.getAttribute('data-nav') == 'true' ? true : false,
+      debug: _this.element.getAttribute('data-debug') == 'true' ? true : false,
       autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
       delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
       onLoad: null,
@@ -76,8 +77,8 @@ var Gallery = function (_ElementController) {
       _this.nextBtn.addEventListener('click', _this.next.bind(_this));
       _this.prevBtn.addEventListener('click', _this.prev.bind(_this));
 
-      _this.element.appendChild(_this.nextBtn);
-      _this.element.appendChild(_this.prevBtn);
+      _this.element.append(_this.nextBtn);
+      _this.element.append(_this.prevBtn);
     }
 
     // add base classes
@@ -95,20 +96,18 @@ var Gallery = function (_ElementController) {
     _wtcUtilityHelpers2.default.addClass('is-loading', _this.element);
 
     // append main element
-    _this.element.appendChild(_this.overlay);
+    _this.element.append(_this.overlay);
 
     // preload images if any
     var images = _this.wrapper.querySelectorAll('img');
     if (images.length > 0) {
-      (function () {
-        var preloader = new _wtcUtilityPreloader2.default({ debug: true });
+      var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
 
-        _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
-          preloader.add(item.getAttribute('src'), 'image');
-        });
+      _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
+        preloader.add(item.getAttribute('src'), 'image');
+      });
 
-        preloader.load(_this.loaded.bind(_this));
-      })();
+      preloader.load(_this.loaded.bind(_this));
     } else {
       _this.loaded();
     }
