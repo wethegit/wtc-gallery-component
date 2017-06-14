@@ -101,13 +101,15 @@ var Gallery = function (_ElementController) {
     // preload images if any
     var images = _this.wrapper.querySelectorAll('img');
     if (images.length > 0) {
-      var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
+      (function () {
+        var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
 
-      _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
-        preloader.add(item.getAttribute('src'), 'image');
-      });
+        _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
+          preloader.add(item.getAttribute('src'), 'image');
+        });
 
-      preloader.load(_this.loaded.bind(_this));
+        preloader.load(_this.loaded.bind(_this));
+      })();
     } else {
       _this.loaded();
     }
