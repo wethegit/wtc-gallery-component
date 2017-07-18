@@ -199,6 +199,14 @@ class Gallery extends ElementController {
 
     return this;
   }
+
+  /**
+   * Get current active DOM Node
+   * @return {DOMNode} Element.
+   */
+  get active() {
+    return this.currentItem;
+  }
 }
 
 ExecuteControllers.registerController(Gallery, 'Gallery');

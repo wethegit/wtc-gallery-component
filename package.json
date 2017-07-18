@@ -1,6 +1,6 @@
 {
   "name": "wtc-gallery-component",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Very simplistic gallery with image preloader and a navigation and autoplay option.",
   "main": "dist/wtc-gallery-component.js",
   "style": "dist/wtc-gallery-component.css",

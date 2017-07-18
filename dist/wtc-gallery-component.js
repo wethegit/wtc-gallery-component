@@ -177,8 +177,8 @@ var Gallery = function (_ElementController) {
     value: function itemTransitioned(item) {
       _wtcUtilityHelpers2.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
-      if (typeof this.onHasChanged == "function") {
-        this.onHasChanged(this, true);
+      if (typeof this.options.onHasChanged == "function") {
+        this.options.onHasChanged(this, true);
       }
 
       return this;
@@ -224,8 +224,8 @@ var Gallery = function (_ElementController) {
   }, {
     key: 'next',
     value: function next() {
-      if (typeof this.onWillChange == "function") {
-        this.onWillChange(this, true);
+      if (typeof this.options.onWillChange == "function") {
+        this.options.onWillChange(this, true);
       }
 
       _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
@@ -243,8 +243,8 @@ var Gallery = function (_ElementController) {
   }, {
     key: 'prev',
     value: function prev() {
-      if (typeof this.onWillChange == "function") {
-        this.onWillChange(this, false);
+      if (typeof this.options.onWillChange == "function") {
+        this.options.onWillChange(this, false);
       }
 
       _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
