@@ -134,8 +134,8 @@ class Gallery extends ElementController {
   itemTransitioned(item) {
     _u.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
-    if (typeof this.onHasChanged == "function") {
-      this.onHasChanged(this, true);
+    if (typeof this.options.onHasChanged == "function") {
+      this.options.onHasChanged(this, true);
     }
 
     return this;
@@ -173,8 +173,8 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   next() {
-    if (typeof this.onWillChange == "function") {
-      this.onWillChange(this, true);
+    if (typeof this.options.onWillChange == "function") {
+      this.options.onWillChange(this, true);
     }
 
     _u.removeClass('is-transitioning--center', this.currentItem);
@@ -189,8 +189,8 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   prev() {
-    if (typeof this.onWillChange == "function") {
-      this.onWillChange(this, false);
+    if (typeof this.options.onWillChange == "function") {
+      this.options.onWillChange(this, false);
     }
 
     _u.removeClass('is-transitioning--center', this.currentItem);
