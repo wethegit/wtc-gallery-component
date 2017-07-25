@@ -253,6 +253,17 @@ var Gallery = function (_ElementController) {
 
       return this;
     }
+
+    /**
+     * Get current active DOM Node
+     * @return {DOMNode} Element.
+     */
+
+  }, {
+    key: 'active',
+    get: function get() {
+      return this.currentItem;
+    }
   }]);
 
   return Gallery;

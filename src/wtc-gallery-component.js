@@ -47,8 +47,8 @@ class Gallery extends ElementController {
       this.nextBtn.addEventListener('click', this.next.bind(this));
       this.prevBtn.addEventListener('click', this.prev.bind(this));
 
-      this.element.append(this.nextBtn);
-      this.element.append(this.prevBtn);
+      this.element.appendChild(this.nextBtn);
+      this.element.appendChild(this.prevBtn);
     }
 
     // add base classes
@@ -66,7 +66,7 @@ class Gallery extends ElementController {
     _u.addClass('is-loading', this.element);
 
     // append main element
-    this.element.append(this.overlay);
+    this.element.appendChild(this.overlay);
 
     // preload images if any
     let images = this.wrapper.querySelectorAll('img');
