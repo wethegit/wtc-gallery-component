@@ -77,8 +77,8 @@ var Gallery = function (_ElementController) {
       _this.nextBtn.addEventListener('click', _this.next.bind(_this));
       _this.prevBtn.addEventListener('click', _this.prev.bind(_this));
 
-      _this.element.append(_this.nextBtn);
-      _this.element.append(_this.prevBtn);
+      _this.element.appendChild(_this.nextBtn);
+      _this.element.appendChild(_this.prevBtn);
     }
 
     // add base classes
@@ -96,7 +96,7 @@ var Gallery = function (_ElementController) {
     _wtcUtilityHelpers2.default.addClass('is-loading', _this.element);
 
     // append main element
-    _this.element.append(_this.overlay);
+    _this.element.appendChild(_this.overlay);
 
     // preload images if any
     var images = _this.wrapper.querySelectorAll('img');
