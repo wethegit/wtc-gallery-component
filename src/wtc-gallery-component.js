@@ -134,8 +134,38 @@ class Gallery extends ElementController {
   itemTransitioned(item) {
     _u.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
+    return this;
+  }
+
+  /**
+   * Changes active item based on its index, starts at 0
+   * @param {number} index
+   *
+   * @return {class} This
+   */
+  moveByIndex(index) {
+    if (this.options.autoplay) {
+      clearTimeout(this.player);
+    }
+
+    let next = this.items[index];
+
+    if (!next) {
+      console.warn('No item with index: ' + index);
+      return;
+    }
+
+    _u.addClass('is-active is-transitioning is-transitioning--center', next);
+    _u.removeClass('is-active', this.currentItem);
+
     if (typeof this.options.onHasChanged == "function") {
-      this.options.onHasChanged(this, true);
+      this.options.onHasChanged(next, this.currentItem);
+    }
+
+    this.currentItem = next;
+
+    if (this.options.autoplay) {
+      this.player = setTimeout(this.next.bind(this), this.options.delay);
     }
 
     return this;
@@ -161,6 +191,10 @@ class Gallery extends ElementController {
     _u.addClass('is-active is-transitioning is-transitioning--center', next);
     _u.removeClass('is-active', this.currentItem);
 
+    if (typeof this.options.onHasChanged == "function") {
+      this.options.onHasChanged(next, this.currentItem);
+    }
+    
     this.currentItem = next;
 
     if (this.options.autoplay) {

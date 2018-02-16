@@ -177,8 +177,41 @@ var Gallery = function (_ElementController) {
     value: function itemTransitioned(item) {
       _wtcUtilityHelpers2.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
+      return this;
+    }
+
+    /**
+     * Changes active item based on its index, starts at 0
+     * @param {number} index
+     *
+     * @return {class} This
+     */
+
+  }, {
+    key: 'moveByIndex',
+    value: function moveByIndex(index) {
+      if (this.options.autoplay) {
+        clearTimeout(this.player);
+      }
+
+      var next = this.items[index];
+
+      if (!next) {
+        console.warn('No item with index: ' + index);
+        return;
+      }
+
+      _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
+      _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+
       if (typeof this.options.onHasChanged == "function") {
-        this.options.onHasChanged(this, true);
+        this.options.onHasChanged(next, this.currentItem);
+      }
+
+      this.currentItem = next;
+
+      if (this.options.autoplay) {
+        this.player = setTimeout(this.next.bind(this), this.options.delay);
       }
 
       return this;
@@ -208,6 +241,10 @@ var Gallery = function (_ElementController) {
 
       _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
       _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+
+      if (typeof this.options.onHasChanged == "function") {
+        this.options.onHasChanged(next, this.currentItem);
+      }
 
       this.currentItem = next;
 
