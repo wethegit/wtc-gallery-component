@@ -20,6 +20,7 @@ class Gallery extends ElementController {
       debug: (this.element.getAttribute('data-debug') == 'true') ? true : false,
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
+      pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -49,6 +50,12 @@ class Gallery extends ElementController {
 
       this.element.appendChild(this.nextBtn);
       this.element.appendChild(this.prevBtn);
+    }
+
+    // Add pause-on-hover mouse events:
+    if (this.options.pauseOnHover) {
+      element.addEventListener('mouseenter', this.pause.bind(this), false);
+      element.addEventListener('mouseleave', this.resume.bind(this), false);
     }
 
     // add base classes
@@ -241,6 +248,31 @@ class Gallery extends ElementController {
   get active() {
     return this.currentItem;
   }
+
+  /**
+   * Pause autoplaying gallery
+   * @return {class} This.
+   */
+  pause() {
+    if (this.options.autoplay) {
+      clearTimeout(this.player);
+    }
+
+    return this;
+  }
+
+  /**
+   * Resume autoplaying gallery
+   * @return {class} This.
+   */
+  resume() {
+    if (this.options.autoplay) {
+      this.player = setTimeout(this.next.bind(this), this.options.delay);
+    }
+
+    return this;
+  }
+
 }
 
 ExecuteControllers.registerController(Gallery, 'Gallery');

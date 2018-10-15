@@ -50,6 +50,7 @@ var Gallery = function (_ElementController) {
       debug: _this.element.getAttribute('data-debug') == 'true' ? true : false,
       autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
       delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
+      pauseOnHover: _this.element.getAttribute('data-pause-on-hover') == 'true' ? true : false,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -81,6 +82,12 @@ var Gallery = function (_ElementController) {
       _this.element.appendChild(_this.prevBtn);
     }
 
+    // Add pause-on-hover mouse events:
+    if (_this.options.pauseOnHover) {
+      element.addEventListener('mouseenter', _this.pause.bind(_this), false);
+      element.addEventListener('mouseleave', _this.resume.bind(_this), false);
+    }
+
     // add base classes
     _wtcUtilityHelpers2.default.addClass('gallery', _this.element);
     _wtcUtilityHelpers2.default.addClass('gallery__overlay', _this.overlay);
@@ -101,15 +108,13 @@ var Gallery = function (_ElementController) {
     // preload images if any
     var images = _this.wrapper.querySelectorAll('img');
     if (images.length > 0) {
-      (function () {
-        var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
+      var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
 
-        _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
-          preloader.add(item.getAttribute('src'), 'image');
-        });
+      _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
+        preloader.add(item.getAttribute('src'), 'image');
+      });
 
-        preloader.load(_this.loaded.bind(_this));
-      })();
+      preloader.load(_this.loaded.bind(_this));
     } else {
       _this.loaded();
     }
@@ -296,6 +301,36 @@ var Gallery = function (_ElementController) {
      * @return {DOMNode} Element.
      */
 
+  }, {
+    key: 'pause',
+
+
+    /**
+     * Pause autoplaying gallery
+     * @return {class} This.
+     */
+    value: function pause() {
+      if (this.options.autoplay) {
+        clearTimeout(this.player);
+      }
+
+      return this;
+    }
+
+    /**
+     * Resume autoplaying gallery
+     * @return {class} This.
+     */
+
+  }, {
+    key: 'resume',
+    value: function resume() {
+      if (this.options.autoplay) {
+        this.player = setTimeout(this.next.bind(this), this.options.delay);
+      }
+
+      return this;
+    }
   }, {
     key: 'active',
     get: function get() {
