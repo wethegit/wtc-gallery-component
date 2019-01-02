@@ -21,6 +21,8 @@ class Gallery extends ElementController {
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
+      draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
+      dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -52,10 +54,25 @@ class Gallery extends ElementController {
       this.element.appendChild(this.prevBtn);
     }
 
-    // Add pause-on-hover mouse events:
+    // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (this.options.pauseOnHover) {
-      element.addEventListener('mouseenter', this.pause.bind(this), false);
-      element.addEventListener('mouseleave', this.resume.bind(this), false);
+      if (window.PointerEvent) {
+        element.addEventListener('pointerover', this.pause.bind(this), false);
+        element.addEventListener('pointerout', this.resume.bind(this), false);
+      } else {
+        element.addEventListener('mouseenter', this.pause.bind(this), false);
+        element.addEventListener('mouseleave', this.resume.bind(this), false);
+      }
+    }
+
+    // Add "draggable" events
+    if (this.options.draggable) {
+      this.dragStartX = null;
+
+      element.addEventListener('mousedown', this.draggablePointerDown.bind(this), false);
+      element.addEventListener('touchstart', this.draggablePointerDown.bind(this), false);
+      element.addEventListener('mouseup', this.draggablePointerUp.bind(this), false);
+      element.addEventListener('touchend', this.draggablePointerUp.bind(this), false);
     }
 
     // add base classes
@@ -88,6 +105,47 @@ class Gallery extends ElementController {
     } else {
       this.loaded();
     }
+  }
+
+  /**
+   * Store x-position of mouse/touch input (in a "draggable" gallery)
+   * 
+   * @return {class} This.
+   */
+  draggablePointerDown(e) {
+    if (e.target.closest('button')) {
+      return;
+    } else {
+      e.preventDefault();
+      let xPos = e.clientX || e.touches['0'].clientX;
+      this.dragStartX = xPos;
+    }
+
+    return this;
+  }
+
+  /**
+   * Advance gallery if drag distance meets or exceeds the established threshold.
+   * 
+   * @return {class} This.
+   */
+  draggablePointerUp(e) {
+    if (e.target.closest('button')) {
+      return;
+    } else {
+      e.preventDefault();
+      let xPos = e.clientX || e.changedTouches['0'].clientX;
+
+      if (Math.abs(xPos - this.dragStartX) > this.options.dragThreshold) {
+        if (xPos > this.dragStartX) {
+          this.prev();
+        } else {
+          this.next();
+        }
+      }
+    }
+
+    return this;
   }
 
   /**
@@ -180,7 +238,7 @@ class Gallery extends ElementController {
 
   /**
    * Changes active items
-   * @param {bool} direction - True = forwards. Flase = backwards
+   * @param {bool} direction - True = forwards. False = backwards
    *
    * @return {class} This
    */
