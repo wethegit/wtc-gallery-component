@@ -1,7 +1,7 @@
 /**
  * Gallery
- * Very simplistic gallery with a navigation and autoplay option.
- *
+ * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
+ * 
  * @author Marlon Marcello <marlon@wethecollective.com>
  * @version 0.1.0
  * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
@@ -12,6 +12,21 @@ import Preloader from 'wtc-utility-preloader';
 import {default as ElementController, ExecuteControllers}  from 'wtc-controller-element';
 
 class Gallery extends ElementController {
+
+  /**
+   * The Gallery Class constructor
+   * @param {HTMLElement} element - the container element which the gallery will live in
+   * @param {Object} options - optional gallery behavior
+   * @param {(boolean|string)} options.nav - adds next and previous navigation buttons
+   * @param {(boolean|string)} options.autoplay - auto-advances the gallery
+   * @param {number} options.delay - duration (in miliseconds) between gallery transitions
+   * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
+   * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
+   * @param {function} options.onLoad - function to run once the gallery is loaded
+   * @param {function} options.onWillChange - function to run before a gallery transition occurs
+   * @param {function} options.onHasChanged - function to run after a gallery transition occurs
+   */
   constructor (element, options = {}) {
     super(element);
 
@@ -108,9 +123,8 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Store x-position of mouse/touch input (in a "draggable" gallery)
-   * 
-   * @return {class} This.
+   * Stores the x-position of mouse/touch input
+   * @param {Object} e - the event object
    */
   draggablePointerDown(e) {
     if (e.target.closest('button')) {
@@ -120,14 +134,11 @@ class Gallery extends ElementController {
       let xPos = e.clientX || e.touches['0'].clientX;
       this.dragStartX = xPos;
     }
-
-    return this;
   }
 
   /**
    * Advance gallery if drag distance meets or exceeds the established threshold.
-   * 
-   * @return {class} This.
+   * @param {Object} e - the event object
    */
   draggablePointerUp(e) {
     if (e.target.closest('button')) {
@@ -144,14 +155,11 @@ class Gallery extends ElementController {
         }
       }
     }
-
-    return this;
   }
 
   /**
    * Adjust main wrapper height.
-   *
-   * @return {class} This.
+   * @return {class} This
    */
   resize() {
     let newH = 0;
@@ -169,9 +177,8 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Removes loading classes and start autoplay.
-   *
-   * @return {class} This.
+   * Removes loading classes and starts autoplay.
+   * @return {class} This
    */
   loaded() {
     window.addEventListener('resize', this.resize.bind(this));
@@ -192,9 +199,9 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Helper class to remove transitioning classes
-   * @param  {DOMNode} item Gallery item.
-   * @return {class}      This.
+   * Helper method to remove CSS transition classes
+   * @param {DOMNode} item - Gallery item.
+   * @return {class} This.
    */
   itemTransitioned(item) {
     _u.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
@@ -205,7 +212,6 @@ class Gallery extends ElementController {
   /**
    * Changes active item based on its index, starts at 0
    * @param {number} index
-   *
    * @return {class} This
    */
   moveByIndex(index) {
@@ -237,9 +243,8 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Changes active items
-   * @param {bool} direction - True = forwards. False = backwards
-   *
+   * Changes active item
+   * @param {boolean} direction - True = forwards. False = backwards
    * @return {class} This
    */
   move(direction = true) {
@@ -300,7 +305,7 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Get current active DOM Node
+   * Get currently-active gallery item
    * @return {DOMNode} Element.
    */
   get active() {

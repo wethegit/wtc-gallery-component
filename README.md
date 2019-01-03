@@ -69,4 +69,7 @@ let gallery = new Gallery(document.getElementById('gallery'), {
 
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
 
+## Caveats
+Please note that this controller should never be stored in an immutable data structure, as doing so can lead to memory leaks due to method bindings within event listeners.
+
 [wtc-controller-element]:https://github.com/wethegit/wtc-controller-element
