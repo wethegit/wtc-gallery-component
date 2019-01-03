@@ -23,6 +23,8 @@ class Gallery extends ElementController {
    * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
+   * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
+   * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified. For accessibility/semantic reasons, this element is assumed to be an unordered list.
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -38,6 +40,8 @@ class Gallery extends ElementController {
       pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
       draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
       dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
+      pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
+      paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? document.querySelector(this.element.getAttribute('data-pagination-target')) : null,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -67,6 +71,48 @@ class Gallery extends ElementController {
 
       this.element.appendChild(this.nextBtn);
       this.element.appendChild(this.prevBtn);
+    }
+
+    // If pagination is set to true, set up the item list
+    if (this.options.pagination) {
+
+      // if a nodeList was provided, use it.
+      // otherwise, build a generic list of buttons
+      if (this.options.paginationTarget) {
+
+        let itemList = this.options.paginationTarget,
+          items = itemList.querySelectorAll('li');
+
+        itemList.classList.add('gallery__pagination');
+
+        _u.forEachNode(items, (index, el) => {
+          el.classList.add('gallery__pagination-item');
+          el.addEventListener('click', this.moveByIndex.bind(this, index));
+        });
+
+      } else {
+
+        let itemList = document.createElement('ul');
+
+        _u.forEachNode(this.items, index => {
+          let item = document.createElement('li'),
+            itemBtn = document.createElement('button'),
+            itemBtnContent = document.createTextNode(index);
+
+          item.classList.add('gallery__pagination-item');
+          item.addEventListener('click', this.moveByIndex.bind(this, index));
+          
+          itemBtn.appendChild(itemBtnContent);
+          item.appendChild(itemBtn);
+          itemList.appendChild(item);
+        });
+        
+        itemList.classList.add('gallery__pagination');
+        this.element.appendChild(itemList);
+        this.paginationList = itemList;
+
+      }
+
     }
 
     // Add pause-on-hover pointer events. Including a fallback to mouse events.

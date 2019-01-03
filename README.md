@@ -62,12 +62,15 @@ let gallery = new Gallery(document.getElementById('gallery'), {
   - pauseOnHover: boolean, pauses autoplay when a pointing device is within the gallery area
   - draggable: boolean, allows for a basic swipe/drag to advance gallery items
   - dragThreshold: number, minimum pixel amount for a drag to advance the slideshow
+  - pagination: boolean, sets up a minimal navigation list of the gallery items
+  - paginationTarget: HTMLElement, sets up a pre-existing list to use as navigation for the gallery items. For accessibility/semantic reasons, this element is assumed to be an unordered list.
   - **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN NOT USING ExecuteControllers:**
   - onLoad: fire after all images were preloaded and gallery will is initiated
   - onWillChange: fire when changing slide
   - onHasChanged: fire after changed slide
 
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
+For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`
 
 ## Caveats
 Please note that this controller should never be stored in an immutable data structure, as doing so can lead to memory leaks due to method bindings within event listeners.
