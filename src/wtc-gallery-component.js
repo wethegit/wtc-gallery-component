@@ -24,7 +24,7 @@ class Gallery extends ElementController {
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
    * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
-   * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified. For accessibility/semantic reasons, this element is assumed to be an unordered list.
+   * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -81,7 +81,7 @@ class Gallery extends ElementController {
       if (this.options.paginationTarget) {
 
         let itemList = this.options.paginationTarget,
-          items = itemList.querySelectorAll('li');
+          items = itemList.children;
 
         itemList.classList.add('gallery__pagination');
 
@@ -272,8 +272,10 @@ class Gallery extends ElementController {
       return;
     }
 
-    _u.addClass('is-active is-transitioning is-transitioning--center', next);
-    _u.removeClass('is-active', this.currentItem);
+    if (this.currentItem != next) {
+      _u.addClass('is-active is-transitioning is-transitioning--center', next);
+      _u.removeClass('is-active', this.currentItem);
+    }
 
     if (typeof this.options.onHasChanged == "function") {
       this.options.onHasChanged(next, this.currentItem);
