@@ -1,7 +1,7 @@
 /**
  * Gallery
- * Very simplistic gallery with a navigation and autoplay option.
- *
+ * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
+ * 
  * @author Marlon Marcello <marlon@wethecollective.com>
  * @version 0.1.0
  * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
@@ -12,6 +12,23 @@ import Preloader from 'wtc-utility-preloader';
 import {default as ElementController, ExecuteControllers}  from 'wtc-controller-element';
 
 class Gallery extends ElementController {
+
+  /**
+   * The Gallery Class constructor
+   * @param {HTMLElement} element - the container element which the gallery will live in
+   * @param {Object} options - optional gallery behavior
+   * @param {(boolean|string)} options.nav - adds next and previous navigation buttons
+   * @param {(boolean|string)} options.autoplay - auto-advances the gallery
+   * @param {number} options.delay - duration (in miliseconds) between gallery transitions
+   * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
+   * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
+   * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
+   * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {function} options.onLoad - function to run once the gallery is loaded
+   * @param {function} options.onWillChange - function to run before a gallery transition occurs
+   * @param {function} options.onHasChanged - function to run after a gallery transition occurs
+   */
   constructor (element, options = {}) {
     super(element);
 
@@ -21,6 +38,10 @@ class Gallery extends ElementController {
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
+      draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
+      dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
+      pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
+      paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? document.querySelector(this.element.getAttribute('data-pagination-target')) : null,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -52,10 +73,67 @@ class Gallery extends ElementController {
       this.element.appendChild(this.prevBtn);
     }
 
-    // Add pause-on-hover mouse events:
+    // If pagination is set to true, set up the item list
+    if (this.options.pagination) {
+
+      // if a nodeList was provided, use it.
+      // otherwise, build a generic list of buttons
+      if (this.options.paginationTarget) {
+
+        let itemList = this.options.paginationTarget,
+          items = itemList.children;
+
+        itemList.classList.add('gallery__pagination');
+
+        _u.forEachNode(items, (index, el) => {
+          el.classList.add('gallery__pagination-item');
+          el.addEventListener('click', this.moveByIndex.bind(this, index));
+        });
+
+      } else {
+
+        let itemList = document.createElement('ul');
+
+        _u.forEachNode(this.items, index => {
+          let item = document.createElement('li'),
+            itemBtn = document.createElement('button'),
+            itemBtnContent = document.createTextNode(index);
+
+          item.classList.add('gallery__pagination-item');
+          item.addEventListener('click', this.moveByIndex.bind(this, index));
+          
+          itemBtn.appendChild(itemBtnContent);
+          item.appendChild(itemBtn);
+          itemList.appendChild(item);
+        });
+        
+        itemList.classList.add('gallery__pagination');
+        this.element.appendChild(itemList);
+        this.paginationList = itemList;
+
+      }
+
+    }
+
+    // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (this.options.pauseOnHover) {
-      element.addEventListener('mouseenter', this.pause.bind(this), false);
-      element.addEventListener('mouseleave', this.resume.bind(this), false);
+      if (window.PointerEvent) {
+        element.addEventListener('pointerover', this.pause.bind(this), false);
+        element.addEventListener('pointerout', this.resume.bind(this), false);
+      } else {
+        element.addEventListener('mouseenter', this.pause.bind(this), false);
+        element.addEventListener('mouseleave', this.resume.bind(this), false);
+      }
+    }
+
+    // Add "draggable" events
+    if (this.options.draggable) {
+      this.dragStartX = null;
+
+      element.addEventListener('mousedown', this.draggablePointerDown.bind(this), false);
+      element.addEventListener('touchstart', this.draggablePointerDown.bind(this), false);
+      element.addEventListener('mouseup', this.draggablePointerUp.bind(this), false);
+      element.addEventListener('touchend', this.draggablePointerUp.bind(this), false);
     }
 
     // add base classes
@@ -91,9 +169,43 @@ class Gallery extends ElementController {
   }
 
   /**
+   * Stores the x-position of mouse/touch input
+   * @param {Object} e - the event object
+   */
+  draggablePointerDown(e) {
+    if (e.target.closest('button')) {
+      return;
+    } else {
+      e.preventDefault();
+      let xPos = e.clientX || e.touches['0'].clientX;
+      this.dragStartX = xPos;
+    }
+  }
+
+  /**
+   * Advance gallery if drag distance meets or exceeds the established threshold.
+   * @param {Object} e - the event object
+   */
+  draggablePointerUp(e) {
+    if (e.target.closest('button')) {
+      return;
+    } else {
+      e.preventDefault();
+      let xPos = e.clientX || e.changedTouches['0'].clientX;
+
+      if (Math.abs(xPos - this.dragStartX) > this.options.dragThreshold) {
+        if (xPos > this.dragStartX) {
+          this.prev();
+        } else {
+          this.next();
+        }
+      }
+    }
+  }
+
+  /**
    * Adjust main wrapper height.
-   *
-   * @return {class} This.
+   * @return {class} This
    */
   resize() {
     let newH = 0;
@@ -111,9 +223,8 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Removes loading classes and start autoplay.
-   *
-   * @return {class} This.
+   * Removes loading classes and starts autoplay.
+   * @return {class} This
    */
   loaded() {
     window.addEventListener('resize', this.resize.bind(this));
@@ -134,9 +245,9 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Helper class to remove transitioning classes
-   * @param  {DOMNode} item Gallery item.
-   * @return {class}      This.
+   * Helper method to remove CSS transition classes
+   * @param {DOMNode} item - Gallery item.
+   * @return {class} This.
    */
   itemTransitioned(item) {
     _u.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
@@ -147,7 +258,6 @@ class Gallery extends ElementController {
   /**
    * Changes active item based on its index, starts at 0
    * @param {number} index
-   *
    * @return {class} This
    */
   moveByIndex(index) {
@@ -162,8 +272,10 @@ class Gallery extends ElementController {
       return;
     }
 
-    _u.addClass('is-active is-transitioning is-transitioning--center', next);
-    _u.removeClass('is-active', this.currentItem);
+    if (this.currentItem != next) {
+      _u.addClass('is-active is-transitioning is-transitioning--center', next);
+      _u.removeClass('is-active', this.currentItem);
+    }
 
     if (typeof this.options.onHasChanged == "function") {
       this.options.onHasChanged(next, this.currentItem);
@@ -179,9 +291,8 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Changes active items
-   * @param {bool} direction - True = forwards. Flase = backwards
-   *
+   * Changes active item
+   * @param {boolean} direction - True = forwards. False = backwards
    * @return {class} This
    */
   move(direction = true) {
@@ -242,7 +353,7 @@ class Gallery extends ElementController {
   }
 
   /**
-   * Get current active DOM Node
+   * Get currently-active gallery item
    * @return {DOMNode} Element.
    */
   get active() {
