@@ -26,8 +26,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Gallery
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Very simplistic gallery with a navigation and autoplay option.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @author Marlon Marcello <marlon@wethecollective.com>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @version 0.1.0
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
@@ -38,6 +38,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Gallery = function (_ElementController) {
   _inherits(Gallery, _ElementController);
 
+  /**
+   * The Gallery Class constructor
+   * @param {HTMLElement} element - the container element which the gallery will live in
+   * @param {Object} options - optional gallery behavior
+   * @param {(boolean|string)} options.nav - adds next and previous navigation buttons
+   * @param {(boolean|string)} options.autoplay - auto-advances the gallery
+   * @param {number} options.delay - duration (in miliseconds) between gallery transitions
+   * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
+   * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
+   * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
+   * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {function} options.onLoad - function to run once the gallery is loaded
+   * @param {function} options.onWillChange - function to run before a gallery transition occurs
+   * @param {function} options.onHasChanged - function to run after a gallery transition occurs
+   */
   function Gallery(element) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -51,6 +67,10 @@ var Gallery = function (_ElementController) {
       autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
       delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: _this.element.getAttribute('data-pause-on-hover') == 'true' ? true : false,
+      draggable: _this.element.getAttribute('data-draggable') == 'true' ? true : false,
+      dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
+      pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
+      paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? document.querySelector(_this.element.getAttribute('data-pagination-target')) : null,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -82,10 +102,64 @@ var Gallery = function (_ElementController) {
       _this.element.appendChild(_this.prevBtn);
     }
 
-    // Add pause-on-hover mouse events:
+    // If pagination is set to true, set up the item list
+    if (_this.options.pagination) {
+
+      // if a nodeList was provided, use it.
+      // otherwise, build a generic list of buttons
+      if (_this.options.paginationTarget) {
+
+        var itemList = _this.options.paginationTarget,
+            items = itemList.children;
+
+        itemList.classList.add('gallery__pagination');
+
+        _wtcUtilityHelpers2.default.forEachNode(items, function (index, el) {
+          el.classList.add('gallery__pagination-item');
+          el.addEventListener('click', _this.moveByIndex.bind(_this, index));
+        });
+      } else {
+
+        var _itemList = document.createElement('ul');
+
+        _wtcUtilityHelpers2.default.forEachNode(_this.items, function (index) {
+          var item = document.createElement('li'),
+              itemBtn = document.createElement('button'),
+              itemBtnContent = document.createTextNode(index);
+
+          item.classList.add('gallery__pagination-item');
+          item.addEventListener('click', _this.moveByIndex.bind(_this, index));
+
+          itemBtn.appendChild(itemBtnContent);
+          item.appendChild(itemBtn);
+          _itemList.appendChild(item);
+        });
+
+        _itemList.classList.add('gallery__pagination');
+        _this.element.appendChild(_itemList);
+        _this.paginationList = _itemList;
+      }
+    }
+
+    // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (_this.options.pauseOnHover) {
-      element.addEventListener('mouseenter', _this.pause.bind(_this), false);
-      element.addEventListener('mouseleave', _this.resume.bind(_this), false);
+      if (window.PointerEvent) {
+        element.addEventListener('pointerover', _this.pause.bind(_this), false);
+        element.addEventListener('pointerout', _this.resume.bind(_this), false);
+      } else {
+        element.addEventListener('mouseenter', _this.pause.bind(_this), false);
+        element.addEventListener('mouseleave', _this.resume.bind(_this), false);
+      }
+    }
+
+    // Add "draggable" events
+    if (_this.options.draggable) {
+      _this.dragStartX = null;
+
+      element.addEventListener('mousedown', _this.draggablePointerDown.bind(_this), false);
+      element.addEventListener('touchstart', _this.draggablePointerDown.bind(_this), false);
+      element.addEventListener('mouseup', _this.draggablePointerUp.bind(_this), false);
+      element.addEventListener('touchend', _this.draggablePointerUp.bind(_this), false);
     }
 
     // add base classes
@@ -122,13 +196,53 @@ var Gallery = function (_ElementController) {
   }
 
   /**
-   * Adjust main wrapper height.
-   *
-   * @return {class} This.
+   * Stores the x-position of mouse/touch input
+   * @param {Object} e - the event object
    */
 
 
   _createClass(Gallery, [{
+    key: 'draggablePointerDown',
+    value: function draggablePointerDown(e) {
+      if (e.target.closest('button')) {
+        return;
+      } else {
+        e.preventDefault();
+        var xPos = e.clientX || e.touches['0'].clientX;
+        this.dragStartX = xPos;
+      }
+    }
+
+    /**
+     * Advance gallery if drag distance meets or exceeds the established threshold.
+     * @param {Object} e - the event object
+     */
+
+  }, {
+    key: 'draggablePointerUp',
+    value: function draggablePointerUp(e) {
+      if (e.target.closest('button')) {
+        return;
+      } else {
+        e.preventDefault();
+        var xPos = e.clientX || e.changedTouches['0'].clientX;
+
+        if (Math.abs(xPos - this.dragStartX) > this.options.dragThreshold) {
+          if (xPos > this.dragStartX) {
+            this.prev();
+          } else {
+            this.next();
+          }
+        }
+      }
+    }
+
+    /**
+     * Adjust main wrapper height.
+     * @return {class} This
+     */
+
+  }, {
     key: 'resize',
     value: function resize() {
       var newH = 0;
@@ -146,9 +260,8 @@ var Gallery = function (_ElementController) {
     }
 
     /**
-     * Removes loading classes and start autoplay.
-     *
-     * @return {class} This.
+     * Removes loading classes and starts autoplay.
+     * @return {class} This
      */
 
   }, {
@@ -172,9 +285,9 @@ var Gallery = function (_ElementController) {
     }
 
     /**
-     * Helper class to remove transitioning classes
-     * @param  {DOMNode} item Gallery item.
-     * @return {class}      This.
+     * Helper method to remove CSS transition classes
+     * @param {DOMNode} item - Gallery item.
+     * @return {class} This.
      */
 
   }, {
@@ -188,7 +301,6 @@ var Gallery = function (_ElementController) {
     /**
      * Changes active item based on its index, starts at 0
      * @param {number} index
-     *
      * @return {class} This
      */
 
@@ -206,8 +318,10 @@ var Gallery = function (_ElementController) {
         return;
       }
 
-      _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
-      _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+      if (this.currentItem != next) {
+        _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
+        _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+      }
 
       if (typeof this.options.onHasChanged == "function") {
         this.options.onHasChanged(next, this.currentItem);
@@ -223,9 +337,8 @@ var Gallery = function (_ElementController) {
     }
 
     /**
-     * Changes active items
-     * @param {bool} direction - True = forwards. Flase = backwards
-     *
+     * Changes active item
+     * @param {boolean} direction - True = forwards. False = backwards
      * @return {class} This
      */
 
@@ -297,7 +410,7 @@ var Gallery = function (_ElementController) {
     }
 
     /**
-     * Get current active DOM Node
+     * Get currently-active gallery item
      * @return {DOMNode} Element.
      */
 
