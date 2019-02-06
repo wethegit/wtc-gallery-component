@@ -76,3 +76,6 @@ For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-ta
 Please note that this controller should never be stored in an immutable data structure, as doing so can lead to memory leaks due to method bindings within event listeners.
 
 [wtc-controller-element]:https://github.com/wethegit/wtc-controller-element
+
+## Documentation
+Documentation can be found [here](https://wethegit.github.io/wtc-gallery-component/Gallery.html)
