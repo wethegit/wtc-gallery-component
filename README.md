@@ -82,6 +82,45 @@ There are many more options you can pass in to the component:
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
 For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`
 
+## Customize!
+The following example uses custom pagination, as well as some other nifty options:
+```html
+<div data-controller="Gallery"
+  data-nav="true"
+  data-autoplay="true"
+  data-delay="6000"
+  data-pause-on-hover="true"
+  data-draggable="true"
+  data-pagination="true"
+  data-pagination-target=".my-custom-pagination"
+>
+  <ul>
+    <li>
+      <img src="./assets/img/image1.jpg" alt="">
+    </li>
+    <li>
+      <img src="./assets/img/image2.jpg" alt="">
+    </li>
+    <li>
+      <img src="./assets/img/image3.jpg" alt="">
+    </li>
+  </ul>
+
+  <!-- A custom pagination element requires the same amount of sub-items as the number of gallery items. -->
+  <ul class="my-custom-pagination">
+    <li>
+      Item 1 🐼 (could be an image, more markup… could be anything!)
+    </li>
+    <li>
+      Item 2 🦊
+    </li>
+    <li>
+      Item 3 🐍
+    </li>
+  </ul>
+</div>
+```
+
 ## Caveats
 Please note that this controller should never be stored in an immutable data structure, as doing so can lead to memory leaks due to method bindings within event listeners.
 
