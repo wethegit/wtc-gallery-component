@@ -1,5 +1,5 @@
 # wtc-gallery-component
-Very simplistic gallery with image preloader and a navigation and autoplay option.
+A minimal, touch-enabled content switcher, with options for autoplay, pagination, and more.
 
 ## Install
 ```sh
@@ -7,17 +7,25 @@ $ npm install wtc-gallery-component
 ```
 
 ## Usage
-Import it in your project.
+Import it into your project.
 ```javascript
 import Gallery from 'wtc-gallery-component';
 ```
 
-Add the markup.
+Include the stylesheet if desired (found in the `dist/` folder).
+
+Add your markup.
 ```html
-<div data-nav="true" data-autoplay="true" data-delay="5000">
+<div data-nav="true">
   <ul>
     <li>
-      <img src="./assets/img/image.jpg" alt="Image">
+      <img src="./assets/img/image.jpg" alt="">
+    </li>
+    <li>
+      <img src="./assets/img/image2.jpg" alt="">
+    </li>
+    <li>
+      <img src="./assets/img/image3.jpg" alt="">
     </li>
   </ul>
 </div>
@@ -28,11 +36,12 @@ You now have 2 options to initalize the component.
 ### 1. Using ExecuteControllers
 If you are using [wtc-controller-element] just add **data-controller="Gallery"** to your markup.
 ```html
-<div data-controller="Gallery" data-nav="true" data-autoplay="true" data-delay="5000">
+<div data-nav="true" data-controller="Gallery">
   <ul>
     <li>
-      <img src="./assets/img/image.jpg" alt="Image">
+      <img src="./assets/img/image.jpg" alt="">
     </li>
+    ...
   </ul>
 </div>
 ```
@@ -42,13 +51,13 @@ ExecuteControllers.instanciate(document.getElementById('gallery'), Gallery);
 ```
 
 ### 2. Default JS
-With the default js version, you have the option to pass the options as an object, or use data-attributes, they both work.  
-If you choose to pass the options to the instance, you get a few extra hooks:
+With the default JS version, you have the option to pass the options as an object, or use data-attributes—they both work.  
+If you choose to pass the options to the instance, you get a few extra hooks: `onLoad`, `onWillChange`, and `onHasChanged`.
 ```javascript
 let gallery = new Gallery(document.getElementById('gallery'), {
   nav: true,
   autoplay: true,
-  delay: 4000,
+  delay: 5000,
   onLoad: null,
   onWillChange: null,
   onHasChanged: null
@@ -56,18 +65,19 @@ let gallery = new Gallery(document.getElementById('gallery'), {
 ```
 
 ## Options
-  - nav: boolean, toggles next/prev buttons
-  - autoplay: boolean, auto-starts the gallery transitions
-  - delay: number, the delay (in milliseconds) between gallery item transitions
-  - pauseOnHover: boolean, pauses autoplay when a pointing device is within the gallery area
-  - draggable: boolean, allows for a basic swipe/drag to advance gallery items
-  - dragThreshold: number, minimum pixel amount for a drag to advance the slideshow
-  - pagination: boolean, sets up a minimal navigation list of the gallery items
-  - paginationTarget: HTMLElement, sets up a pre-existing list to use as navigation for the gallery items. For accessibility/semantic reasons, this element is assumed to be an unordered list.
+There are many more options you can pass in to the component:
+  - `nav`: Boolean. Toggles next/previous buttons. Defaults to `false`.
+  - `autoplay`: Boolean. Auto-starts the gallery transitions. Defaults to `false`.
+  - `delay`: Number. The delay (in milliseconds) between gallery item transitions. Defaults to `5000`.
+  - `pauseOnHover`: Boolean. Pauses autoplay when a pointing device is within the gallery area. Defaults to `false`.
+  - `draggable`: Boolean. Allows for a basic swipe/drag to advance gallery items. Defaults to `false`.
+  - `dragThreshold`: Number. Minimum pixel amount for a drag action to advance the slideshow. Defaults to `40` pixels.
+  - `pagination`: Boolean. Sets up a navigation list of the gallery items. If `paginationTarget` (below) is specified, you can pass in your own list of elements to use; otherwise a bare bones list will be set up for you. Defaults to `false`.
+  - `paginationTarget`: HTMLElement. Integrates an element from your markup (an unordered list, for example) to use as navigation for the gallery items. Defaults to `null`.
   - **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN NOT USING ExecuteControllers:**
-  - onLoad: fire after all images were preloaded and gallery will is initiated
-  - onWillChange: fire when changing slide
-  - onHasChanged: fire after changed slide
+  - `onLoad`: Function. Fires after all images were preloaded, and the gallery is initiated.
+  - `onWillChange`: Function. Fires before a gallery transition.
+  - `onHasChanged`: Function. Fires after a gallery transition.
 
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
 For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`
