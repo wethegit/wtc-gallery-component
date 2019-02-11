@@ -73,7 +73,7 @@ There are many more options you can pass in to the component:
   - `draggable`: Boolean. Allows for a basic swipe/drag to advance gallery items. Defaults to `false`.
   - `dragThreshold`: Number. Minimum pixel amount for a drag action to advance the slideshow. Defaults to `40` pixels.
   - `pagination`: Boolean. Sets up a navigation list of the gallery items. If `paginationTarget` (below) is specified, you can pass in your own list of elements to use; otherwise a bare bones list will be set up for you. Defaults to `false`.
-  - `paginationTarget`: HTMLElement. Integrates an element from your markup (an unordered list, for example) to use as navigation for the gallery items. Defaults to `null`.
+  - `paginationTarget`: HTMLElement. Integrates an element from your markup (an unordered list, for example) to use as navigation for the gallery items. Pagination items will be created from the immediate children of the given element. Defaults to `null`.
   - **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN NOT USING ExecuteControllers:**
   - `onLoad`: Function. Fires after all images were preloaded, and the gallery is initiated.
   - `onWillChange`: Function. Fires before a gallery transition.
