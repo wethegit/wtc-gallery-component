@@ -3,7 +3,7 @@
  * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
  * 
  * @author Marlon Marcello <marlon@wethecollective.com>
- * @version 0.1.0
+ * @version 0.2.0
  * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
  * @created Nov 30, 2016
  */
@@ -55,6 +55,7 @@ class Gallery extends ElementController {
     this.items = this.wrapper.querySelectorAll('li');
     this.overlay = document.createElement('div');
     this.currentItem = this.items[0];
+    this.currentIndex = 0;
 
     // If nav is set to true, create buttons
     if (this.options.nav) {
@@ -76,23 +77,25 @@ class Gallery extends ElementController {
     // If pagination is set to true, set up the item list
     if (this.options.pagination) {
 
+      let itemList;
+
       // if a nodeList was provided, use it.
       // otherwise, build a generic list of buttons
       if (this.options.paginationTarget) {
 
-        let itemList = this.options.paginationTarget,
-          items = itemList.children;
-
-        itemList.classList.add('gallery__pagination');
+        itemList = this.options.paginationTarget;
+        let items = itemList.children;
 
         _u.forEachNode(items, (index, el) => {
           el.classList.add('gallery__pagination-item');
-          el.addEventListener('click', this.moveByIndex.bind(this, index));
+          if (!el.dataset.index) el.dataset.index = index;
+          if (index === 0) el.classList.add('is-active');
+          el.addEventListener('click', this.handlePagination.bind(this));
         });
 
       } else {
 
-        let itemList = document.createElement('ul');
+        itemList = document.createElement('ul');
 
         _u.forEachNode(this.items, index => {
           let item = document.createElement('li'),
@@ -100,18 +103,19 @@ class Gallery extends ElementController {
             itemBtnContent = document.createTextNode(index);
 
           item.classList.add('gallery__pagination-item');
-          item.addEventListener('click', this.moveByIndex.bind(this, index));
+          item.dataset.index = index;
+          item.addEventListener('click', this.handlePagination.bind(this));
           
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
           itemList.appendChild(item);
         });
         
-        itemList.classList.add('gallery__pagination');
         this.element.appendChild(itemList);
-        this.paginationList = itemList;
-
       }
+
+      this.paginationList = itemList;
+      itemList.classList.add('gallery__pagination');
 
     }
 
@@ -142,7 +146,7 @@ class Gallery extends ElementController {
     _u.addClass('gallery__wrapper', this.wrapper);
     _u.forEachNode(this.items, (index, item)=> {
       _u.addClass('gallery__item', item);
-
+      item.dataset.index = index;
       item.addEventListener('transitionend', this.itemTransitioned.bind(this, item));
     });
 
@@ -165,6 +169,22 @@ class Gallery extends ElementController {
       preloader.load(this.loaded.bind(this));
     } else {
       this.loaded();
+    }
+  }
+
+  /**
+   * Advances gallery to the index of the selected pagination item.
+   * @param {Object} e - the event object
+   */
+  handlePagination(e) {
+    let target = e.target.closest('.gallery__pagination-item');
+    if (target) {
+      let i = target.dataset.index;
+      _u.forEachNode(this.paginationList.children, (index, item)=> {
+        if (i == index) _u.addClass('is-active', item);
+        else _u.removeClass('is-active', item);
+      });
+      this.moveByIndex(i);
     }
   }
 
@@ -261,11 +281,10 @@ class Gallery extends ElementController {
    * @return {class} This
    */
   moveByIndex(index) {
-    if (this.options.autoplay) {
-      clearTimeout(this.player);
-    }
-
     let next = this.items[index];
+
+    if (this.options.autoplay)
+      clearTimeout(this.player);
 
     if (!next) {
       console.warn('No item with index: ' + index);
@@ -282,6 +301,7 @@ class Gallery extends ElementController {
     }
 
     this.currentItem = next;
+    this.currentIndex = index;
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -303,7 +323,7 @@ class Gallery extends ElementController {
     let next = (direction) ? this.currentItem.nextElementSibling : this.currentItem.previousElementSibling;
 
     if (!next) {
-      next = (direction) ? this.items[0] : this.items[this.items.length-1];
+      next = (direction) ? this.items[0] : this.items[this.items.length-1]; 
     }
 
     _u.addClass('is-active is-transitioning is-transitioning--center', next);
@@ -325,12 +345,30 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   next() {
+    this.currentIndex = parseInt(this.currentItem.dataset.index);
+
     if (typeof this.options.onWillChange == "function") {
       this.options.onWillChange(this, true);
     }
 
     _u.removeClass('is-transitioning--center', this.currentItem);
     _u.addClass('is-transitioning is-transitioning--backward', this.currentItem);
+
+    if (this.paginationList) {
+      let nextIndex;
+
+      if (this.currentIndex == this.items.length - 1) {
+        nextIndex = 0;
+      } else {
+        nextIndex = parseInt(this.currentIndex) + 1;
+      }
+
+      _u.forEachNode(this.paginationList.children, (index, item) => {
+        if (index == nextIndex) _u.addClass('is-active', item);
+        else _u.removeClass('is-active', item);
+      });
+    }
+
     this.move();
 
     return this;
@@ -341,12 +379,30 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   prev() {
+    this.currentIndex = this.currentItem.dataset.index;
+
     if (typeof this.options.onWillChange == "function") {
       this.options.onWillChange(this, false);
     }
 
     _u.removeClass('is-transitioning--center', this.currentItem);
     _u.addClass('is-transitioning is-transitioning--forward', this.currentItem);
+
+    if (this.paginationList) {
+      let prevIndex;
+
+      if (this.currentIndex == 0) {
+        prevIndex = this.items.length - 1;
+      } else {
+        prevIndex = this.currentIndex - 1;
+      }
+
+      _u.forEachNode(this.paginationList.children, (index, item)=> {
+        if (index == prevIndex) _u.addClass('is-active', item);
+        else _u.removeClass('is-active', item);
+      });
+    }
+
     this.move(false);
 
     return this;
@@ -358,6 +414,14 @@ class Gallery extends ElementController {
    */
   get active() {
     return this.currentItem;
+  }
+
+  /**
+   * Get the index of the currently-active gallery item
+   * @return {DOMNode} Element.
+   */
+  get activeIndex() {
+    return this.currentIndex;
   }
 
   /**

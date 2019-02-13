@@ -29,7 +29,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @author Marlon Marcello <marlon@wethecollective.com>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @version 0.1.0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @version 0.2.0
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @created Nov 30, 2016
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
@@ -84,6 +84,7 @@ var Gallery = function (_ElementController) {
     _this.items = _this.wrapper.querySelectorAll('li');
     _this.overlay = document.createElement('div');
     _this.currentItem = _this.items[0];
+    _this.currentIndex = 0;
 
     // If nav is set to true, create buttons
     if (_this.options.nav) {
@@ -105,22 +106,24 @@ var Gallery = function (_ElementController) {
     // If pagination is set to true, set up the item list
     if (_this.options.pagination) {
 
+      var itemList = void 0;
+
       // if a nodeList was provided, use it.
       // otherwise, build a generic list of buttons
       if (_this.options.paginationTarget) {
 
-        var itemList = _this.options.paginationTarget,
-            items = itemList.children;
-
-        itemList.classList.add('gallery__pagination');
+        itemList = _this.options.paginationTarget;
+        var items = itemList.children;
 
         _wtcUtilityHelpers2.default.forEachNode(items, function (index, el) {
           el.classList.add('gallery__pagination-item');
-          el.addEventListener('click', _this.moveByIndex.bind(_this, index));
+          if (!el.dataset.index) el.dataset.index = index;
+          if (index === 0) el.classList.add('is-active');
+          el.addEventListener('click', _this.handlePagination.bind(_this));
         });
       } else {
 
-        var _itemList = document.createElement('ul');
+        itemList = document.createElement('ul');
 
         _wtcUtilityHelpers2.default.forEachNode(_this.items, function (index) {
           var item = document.createElement('li'),
@@ -128,17 +131,19 @@ var Gallery = function (_ElementController) {
               itemBtnContent = document.createTextNode(index);
 
           item.classList.add('gallery__pagination-item');
-          item.addEventListener('click', _this.moveByIndex.bind(_this, index));
+          item.dataset.index = index;
+          item.addEventListener('click', _this.handlePagination.bind(_this));
 
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
-          _itemList.appendChild(item);
+          itemList.appendChild(item);
         });
 
-        _itemList.classList.add('gallery__pagination');
-        _this.element.appendChild(_itemList);
-        _this.paginationList = _itemList;
+        _this.element.appendChild(itemList);
       }
+
+      _this.paginationList = itemList;
+      itemList.classList.add('gallery__pagination');
     }
 
     // Add pause-on-hover pointer events. Including a fallback to mouse events.
@@ -168,7 +173,7 @@ var Gallery = function (_ElementController) {
     _wtcUtilityHelpers2.default.addClass('gallery__wrapper', _this.wrapper);
     _wtcUtilityHelpers2.default.forEachNode(_this.items, function (index, item) {
       _wtcUtilityHelpers2.default.addClass('gallery__item', item);
-
+      item.dataset.index = index;
       item.addEventListener('transitionend', _this.itemTransitioned.bind(_this, item));
     });
 
@@ -196,12 +201,30 @@ var Gallery = function (_ElementController) {
   }
 
   /**
-   * Stores the x-position of mouse/touch input
+   * Advances gallery to the index of the selected pagination item.
    * @param {Object} e - the event object
    */
 
 
   _createClass(Gallery, [{
+    key: 'handlePagination',
+    value: function handlePagination(e) {
+      var target = e.target.closest('.gallery__pagination-item');
+      if (target) {
+        var i = target.dataset.index;
+        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (i == index) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+        });
+        this.moveByIndex(i);
+      }
+    }
+
+    /**
+     * Stores the x-position of mouse/touch input
+     * @param {Object} e - the event object
+     */
+
+  }, {
     key: 'draggablePointerDown',
     value: function draggablePointerDown(e) {
       if (e.target.closest('button')) {
@@ -307,11 +330,9 @@ var Gallery = function (_ElementController) {
   }, {
     key: 'moveByIndex',
     value: function moveByIndex(index) {
-      if (this.options.autoplay) {
-        clearTimeout(this.player);
-      }
-
       var next = this.items[index];
+
+      if (this.options.autoplay) clearTimeout(this.player);
 
       if (!next) {
         console.warn('No item with index: ' + index);
@@ -328,6 +349,7 @@ var Gallery = function (_ElementController) {
       }
 
       this.currentItem = next;
+      this.currentIndex = index;
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -379,12 +401,29 @@ var Gallery = function (_ElementController) {
   }, {
     key: 'next',
     value: function next() {
+      this.currentIndex = parseInt(this.currentItem.dataset.index);
+
       if (typeof this.options.onWillChange == "function") {
         this.options.onWillChange(this, true);
       }
 
       _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
       _wtcUtilityHelpers2.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
+
+      if (this.paginationList) {
+        var nextIndex = void 0;
+
+        if (this.currentIndex == this.items.length - 1) {
+          nextIndex = 0;
+        } else {
+          nextIndex = parseInt(this.currentIndex) + 1;
+        }
+
+        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (index == nextIndex) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+        });
+      }
+
       this.move();
 
       return this;
@@ -398,12 +437,29 @@ var Gallery = function (_ElementController) {
   }, {
     key: 'prev',
     value: function prev() {
+      this.currentIndex = this.currentItem.dataset.index;
+
       if (typeof this.options.onWillChange == "function") {
         this.options.onWillChange(this, false);
       }
 
       _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
       _wtcUtilityHelpers2.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
+
+      if (this.paginationList) {
+        var prevIndex = void 0;
+
+        if (this.currentIndex == 0) {
+          prevIndex = this.items.length - 1;
+        } else {
+          prevIndex = this.currentIndex - 1;
+        }
+
+        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (index == prevIndex) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+        });
+      }
+
       this.move(false);
 
       return this;
@@ -448,6 +504,17 @@ var Gallery = function (_ElementController) {
     key: 'active',
     get: function get() {
       return this.currentItem;
+    }
+
+    /**
+     * Get the index of the currently-active gallery item
+     * @return {DOMNode} Element.
+     */
+
+  }, {
+    key: 'activeIndex',
+    get: function get() {
+      return this.currentIndex;
     }
   }]);
 
