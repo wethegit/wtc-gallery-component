@@ -52,7 +52,7 @@ class Gallery extends ElementController {
     }
 
     this.wrapper = this.element.querySelector('ul');
-    this.items = this.wrapper.querySelectorAll('li');
+    this.items = this.wrapper.children;
     this.overlay = document.createElement('div');
     this.currentItem = this.items[0];
     this.currentIndex = 0;
