@@ -1,41 +1,41 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _wtcUtilityHelpers = _interopRequireDefault(require("wtc-utility-helpers"));
 
-var _wtcUtilityHelpers = require('wtc-utility-helpers');
+var _wtcUtilityPreloader = _interopRequireDefault(require("wtc-utility-preloader"));
 
-var _wtcUtilityHelpers2 = _interopRequireDefault(_wtcUtilityHelpers);
+var _wtcControllerElement = _interopRequireWildcard(require("wtc-controller-element"));
 
-var _wtcUtilityPreloader = require('wtc-utility-preloader');
-
-var _wtcUtilityPreloader2 = _interopRequireDefault(_wtcUtilityPreloader);
-
-var _wtcControllerElement = require('wtc-controller-element');
-
-var _wtcControllerElement2 = _interopRequireDefault(_wtcControllerElement);
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Gallery
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Minimal content switcher class, with options for autoplay, navigation, pagination, and more.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author Marlon Marcello <marlon@wethecollective.com>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @version 0.2.0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @created Nov 30, 2016
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-var Gallery = function (_ElementController) {
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Gallery =
+/*#__PURE__*/
+function (_ElementController) {
   _inherits(Gallery, _ElementController);
 
   /**
@@ -55,12 +55,13 @@ var Gallery = function (_ElementController) {
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
    */
   function Gallery(element) {
+    var _this;
+
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     _classCallCheck(this, Gallery);
 
-    var _this = _possibleConstructorReturn(this, (Gallery.__proto__ || Object.getPrototypeOf(Gallery)).call(this, element));
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Gallery).call(this, element));
     _this.options = {
       nav: _this.element.getAttribute('data-nav') == 'true' ? true : false,
       debug: _this.element.getAttribute('data-debug') == 'true' ? true : false,
@@ -77,63 +78,59 @@ var Gallery = function (_ElementController) {
     };
 
     if (options) {
-      _this.options = _wtcUtilityHelpers2.default.extend(_this.options, options);
+      _this.options = _wtcUtilityHelpers.default.extend(_this.options, options);
     }
 
     _this.wrapper = _this.element.querySelector('ul');
-    _this.items = _this.wrapper.querySelectorAll('li');
+    _this.items = _this.wrapper.children;
     _this.overlay = document.createElement('div');
     _this.currentItem = _this.items[0];
-    _this.currentIndex = 0;
+    _this.currentIndex = 0; // If nav is set to true, create buttons
 
-    // If nav is set to true, create buttons
     if (_this.options.nav) {
       _this.nextBtn = document.createElement('button');
       _this.nextBtn.innerHTML = 'Next';
       _this.prevBtn = document.createElement('button');
       _this.prevBtn.innerHTML = 'Previous';
 
-      _wtcUtilityHelpers2.default.addClass('gallery__nav gallery__nav-next', _this.nextBtn);
-      _wtcUtilityHelpers2.default.addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
+      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
-      _this.nextBtn.addEventListener('click', _this.next.bind(_this));
-      _this.prevBtn.addEventListener('click', _this.prev.bind(_this));
+      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
+
+      _this.nextBtn.addEventListener('click', _this.next.bind(_assertThisInitialized(_this)));
+
+      _this.prevBtn.addEventListener('click', _this.prev.bind(_assertThisInitialized(_this)));
 
       _this.element.appendChild(_this.nextBtn);
+
       _this.element.appendChild(_this.prevBtn);
-    }
+    } // If pagination is set to true, set up the item list
 
-    // If pagination is set to true, set up the item list
+
     if (_this.options.pagination) {
-
-      var itemList = void 0;
-
-      // if a nodeList was provided, use it.
+      var itemList; // if a nodeList was provided, use it.
       // otherwise, build a generic list of buttons
-      if (_this.options.paginationTarget) {
 
+      if (_this.options.paginationTarget) {
         itemList = _this.options.paginationTarget;
         var items = itemList.children;
 
-        _wtcUtilityHelpers2.default.forEachNode(items, function (index, el) {
+        _wtcUtilityHelpers.default.forEachNode(items, function (index, el) {
           el.classList.add('gallery__pagination-item');
           if (!el.dataset.index) el.dataset.index = index;
           if (index === 0) el.classList.add('is-active');
-          el.addEventListener('click', _this.handlePagination.bind(_this));
+          el.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
         });
       } else {
-
         itemList = document.createElement('ul');
 
-        _wtcUtilityHelpers2.default.forEachNode(_this.items, function (index) {
+        _wtcUtilityHelpers.default.forEachNode(_this.items, function (index) {
           var item = document.createElement('li'),
               itemBtn = document.createElement('button'),
               itemBtnContent = document.createTextNode(index);
-
           item.classList.add('gallery__pagination-item');
           item.dataset.index = index;
-          item.addEventListener('click', _this.handlePagination.bind(_this));
-
+          item.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
           itemList.appendChild(item);
@@ -144,62 +141,69 @@ var Gallery = function (_ElementController) {
 
       _this.paginationList = itemList;
       itemList.classList.add('gallery__pagination');
-    }
+    } // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
-    // Add pause-on-hover pointer events. Including a fallback to mouse events.
+
     if (_this.options.pauseOnHover) {
       if (window.PointerEvent) {
-        element.addEventListener('pointerover', _this.pause.bind(_this), false);
-        element.addEventListener('pointerout', _this.resume.bind(_this), false);
+        element.addEventListener('pointerover', _this.pause.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener('pointerout', _this.resume.bind(_assertThisInitialized(_this)), false);
       } else {
-        element.addEventListener('mouseenter', _this.pause.bind(_this), false);
-        element.addEventListener('mouseleave', _this.resume.bind(_this), false);
+        element.addEventListener('mouseenter', _this.pause.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener('mouseleave', _this.resume.bind(_assertThisInitialized(_this)), false);
       }
-    }
+    } // Add "draggable" events
 
-    // Add "draggable" events
+
     if (_this.options.draggable) {
       _this.dragStartX = null;
+      element.addEventListener('mousedown', _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener('touchstart', _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener('mouseup', _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener('touchend', _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
+    } // add base classes
 
-      element.addEventListener('mousedown', _this.draggablePointerDown.bind(_this), false);
-      element.addEventListener('touchstart', _this.draggablePointerDown.bind(_this), false);
-      element.addEventListener('mouseup', _this.draggablePointerUp.bind(_this), false);
-      element.addEventListener('touchend', _this.draggablePointerUp.bind(_this), false);
-    }
 
-    // add base classes
-    _wtcUtilityHelpers2.default.addClass('gallery', _this.element);
-    _wtcUtilityHelpers2.default.addClass('gallery__overlay', _this.overlay);
-    _wtcUtilityHelpers2.default.addClass('gallery__wrapper', _this.wrapper);
-    _wtcUtilityHelpers2.default.forEachNode(_this.items, function (index, item) {
-      _wtcUtilityHelpers2.default.addClass('gallery__item', item);
+    _wtcUtilityHelpers.default.addClass('gallery', _this.element);
+
+    _wtcUtilityHelpers.default.addClass('gallery__overlay', _this.overlay);
+
+    _wtcUtilityHelpers.default.addClass('gallery__wrapper', _this.wrapper);
+
+    _wtcUtilityHelpers.default.forEachNode(_this.items, function (index, item) {
+      _wtcUtilityHelpers.default.addClass('gallery__item', item);
+
       item.dataset.index = index;
-      item.addEventListener('transitionend', _this.itemTransitioned.bind(_this, item));
-    });
+      item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
+    }); // add state classes
 
-    // add state classes
-    _wtcUtilityHelpers2.default.addClass('is-active', _this.currentItem);
-    _wtcUtilityHelpers2.default.addClass('is-loading', _this.element);
 
-    // append main element
-    _this.element.appendChild(_this.overlay);
+    _wtcUtilityHelpers.default.addClass('is-active', _this.currentItem);
 
-    // preload images if any
+    _wtcUtilityHelpers.default.addClass('is-loading', _this.element); // append main element
+
+
+    _this.element.appendChild(_this.overlay); // preload images if any
+
+
     var images = _this.wrapper.querySelectorAll('img');
-    if (images.length > 0) {
-      var preloader = new _wtcUtilityPreloader2.default({ debug: _this.options.debug });
 
-      _wtcUtilityHelpers2.default.forEachNode(images, function (index, item) {
+    if (images.length > 0) {
+      var preloader = new _wtcUtilityPreloader.default({
+        debug: _this.options.debug
+      });
+
+      _wtcUtilityHelpers.default.forEachNode(images, function (index, item) {
         preloader.add(item.getAttribute('src'), 'image');
       });
 
-      preloader.load(_this.loaded.bind(_this));
+      preloader.load(_this.loaded.bind(_assertThisInitialized(_this)));
     } else {
       _this.loaded();
     }
+
     return _this;
   }
-
   /**
    * Advances gallery to the index of the selected pagination item.
    * @param {Object} e - the event object
@@ -207,25 +211,27 @@ var Gallery = function (_ElementController) {
 
 
   _createClass(Gallery, [{
-    key: 'handlePagination',
+    key: "handlePagination",
     value: function handlePagination(e) {
       var target = e.target.closest('.gallery__pagination-item');
+
       if (target) {
         var i = target.dataset.index;
-        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (i == index) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+
+        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (i == index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
         });
+
         this.moveByIndex(i);
       }
     }
-
     /**
      * Stores the x-position of mouse/touch input
      * @param {Object} e - the event object
      */
 
   }, {
-    key: 'draggablePointerDown',
+    key: "draggablePointerDown",
     value: function draggablePointerDown(e) {
       if (e.target.closest('button')) {
         return;
@@ -235,14 +241,13 @@ var Gallery = function (_ElementController) {
         this.dragStartX = xPos;
       }
     }
-
     /**
      * Advance gallery if drag distance meets or exceeds the established threshold.
      * @param {Object} e - the event object
      */
 
   }, {
-    key: 'draggablePointerUp',
+    key: "draggablePointerUp",
     value: function draggablePointerUp(e) {
       if (e.target.closest('button')) {
         return;
@@ -259,42 +264,41 @@ var Gallery = function (_ElementController) {
         }
       }
     }
-
     /**
      * Adjust main wrapper height.
      * @return {class} This
      */
 
   }, {
-    key: 'resize',
+    key: "resize",
     value: function resize() {
       var newH = 0;
 
-      _wtcUtilityHelpers2.default.forEachNode(this.items, function (index, item) {
+      _wtcUtilityHelpers.default.forEachNode(this.items, function (index, item) {
         var h = item.offsetHeight;
+
         if (h > newH) {
           newH = h;
         }
       });
 
-      this.wrapper.style.height = newH + 'px';
-
+      this.wrapper.style.height = "".concat(newH, "px");
       return this;
     }
-
     /**
      * Removes loading classes and starts autoplay.
      * @return {class} This
      */
 
   }, {
-    key: 'loaded',
+    key: "loaded",
     value: function loaded() {
       window.addEventListener('resize', this.resize.bind(this));
       this.resize();
 
-      _wtcUtilityHelpers2.default.removeClass('is-loading', this.element);
-      _wtcUtilityHelpers2.default.addClass('is-loaded', this.element);
+      _wtcUtilityHelpers.default.removeClass('is-loading', this.element);
+
+      _wtcUtilityHelpers.default.addClass('is-loaded', this.element);
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -306,7 +310,6 @@ var Gallery = function (_ElementController) {
 
       return this;
     }
-
     /**
      * Helper method to remove CSS transition classes
      * @param {DOMNode} item - Gallery item.
@@ -314,13 +317,12 @@ var Gallery = function (_ElementController) {
      */
 
   }, {
-    key: 'itemTransitioned',
+    key: "itemTransitioned",
     value: function itemTransitioned(item) {
-      _wtcUtilityHelpers2.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
       return this;
     }
-
     /**
      * Changes active item based on its index, starts at 0
      * @param {number} index
@@ -328,10 +330,9 @@ var Gallery = function (_ElementController) {
      */
 
   }, {
-    key: 'moveByIndex',
+    key: "moveByIndex",
     value: function moveByIndex(index) {
       var next = this.items[index];
-
       if (this.options.autoplay) clearTimeout(this.player);
 
       if (!next) {
@@ -340,8 +341,9 @@ var Gallery = function (_ElementController) {
       }
 
       if (this.currentItem != next) {
-        _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
-        _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+        _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+
+        _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
       }
 
       if (typeof this.options.onHasChanged == "function") {
@@ -357,7 +359,6 @@ var Gallery = function (_ElementController) {
 
       return this;
     }
-
     /**
      * Changes active item
      * @param {boolean} direction - True = forwards. False = backwards
@@ -365,7 +366,7 @@ var Gallery = function (_ElementController) {
      */
 
   }, {
-    key: 'move',
+    key: "move",
     value: function move() {
       var direction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -379,8 +380,9 @@ var Gallery = function (_ElementController) {
         next = direction ? this.items[0] : this.items[this.items.length - 1];
       }
 
-      _wtcUtilityHelpers2.default.addClass('is-active is-transitioning is-transitioning--center', next);
-      _wtcUtilityHelpers2.default.removeClass('is-active', this.currentItem);
+      _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+
+      _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
 
       if (typeof this.options.onHasChanged == "function") {
         this.options.onHasChanged(next, this.currentItem);
@@ -392,14 +394,13 @@ var Gallery = function (_ElementController) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
       }
     }
-
     /**
      * Move forward
      * @return {class} This.
      */
 
   }, {
-    key: 'next',
+    key: "next",
     value: function next() {
       this.currentIndex = parseInt(this.currentItem.dataset.index);
 
@@ -407,11 +408,12 @@ var Gallery = function (_ElementController) {
         this.options.onWillChange(this, true);
       }
 
-      _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
-      _wtcUtilityHelpers2.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+
+      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
 
       if (this.paginationList) {
-        var nextIndex = void 0;
+        var nextIndex;
 
         if (this.currentIndex == this.items.length - 1) {
           nextIndex = 0;
@@ -419,23 +421,21 @@ var Gallery = function (_ElementController) {
           nextIndex = parseInt(this.currentIndex) + 1;
         }
 
-        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (index == nextIndex) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (index == nextIndex) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
         });
       }
 
       this.move();
-
       return this;
     }
-
     /**
      * Move backwards
      * @return {class} This.
      */
 
   }, {
-    key: 'prev',
+    key: "prev",
     value: function prev() {
       this.currentIndex = this.currentItem.dataset.index;
 
@@ -443,11 +443,12 @@ var Gallery = function (_ElementController) {
         this.options.onWillChange(this, false);
       }
 
-      _wtcUtilityHelpers2.default.removeClass('is-transitioning--center', this.currentItem);
-      _wtcUtilityHelpers2.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+
+      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
 
       if (this.paginationList) {
-        var prevIndex = void 0;
+        var prevIndex;
 
         if (this.currentIndex == 0) {
           prevIndex = this.items.length - 1;
@@ -455,24 +456,21 @@ var Gallery = function (_ElementController) {
           prevIndex = this.currentIndex - 1;
         }
 
-        _wtcUtilityHelpers2.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (index == prevIndex) _wtcUtilityHelpers2.default.addClass('is-active', item);else _wtcUtilityHelpers2.default.removeClass('is-active', item);
+        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (index == prevIndex) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
         });
       }
 
       this.move(false);
-
       return this;
     }
-
     /**
      * Get currently-active gallery item
      * @return {DOMNode} Element.
      */
 
   }, {
-    key: 'pause',
-
+    key: "pause",
 
     /**
      * Pause autoplaying gallery
@@ -485,14 +483,13 @@ var Gallery = function (_ElementController) {
 
       return this;
     }
-
     /**
      * Resume autoplaying gallery
      * @return {class} This.
      */
 
   }, {
-    key: 'resume',
+    key: "resume",
     value: function resume() {
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -501,26 +498,26 @@ var Gallery = function (_ElementController) {
       return this;
     }
   }, {
-    key: 'active',
+    key: "active",
     get: function get() {
       return this.currentItem;
     }
-
     /**
      * Get the index of the currently-active gallery item
      * @return {DOMNode} Element.
      */
 
   }, {
-    key: 'activeIndex',
+    key: "activeIndex",
     get: function get() {
       return this.currentIndex;
     }
   }]);
 
   return Gallery;
-}(_wtcControllerElement2.default);
+}(_wtcControllerElement.default);
 
 _wtcControllerElement.ExecuteControllers.registerController(Gallery, 'Gallery');
 
-exports.default = Gallery;
+var _default = Gallery;
+exports.default = _default;
