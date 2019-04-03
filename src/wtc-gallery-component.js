@@ -41,7 +41,7 @@ class Gallery extends ElementController {
       draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
       dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
-      paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? document.querySelector(this.element.getAttribute('data-pagination-target')) : null,
+      paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? this.element.getAttribute('data-pagination-target') : null,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -83,7 +83,7 @@ class Gallery extends ElementController {
       // otherwise, build a generic list of buttons
       if (this.options.paginationTarget) {
 
-        itemList = this.options.paginationTarget;
+        itemList = document.querySelector(this.options.paginationTarget);
         let items = itemList.children;
 
         _u.forEachNode(items, (index, el) => {
@@ -115,7 +115,10 @@ class Gallery extends ElementController {
       }
 
       this.paginationList = itemList;
+      this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
+
+      console.log(this.paginationItems)
 
     }
 
@@ -283,8 +286,9 @@ class Gallery extends ElementController {
   moveByIndex(index) {
     let next = this.items[index];
 
-    if (this.options.autoplay)
+    if (this.options.autoplay) {
       clearTimeout(this.player);
+    }
 
     if (!next) {
       console.warn('No item with index: ' + index);
@@ -294,6 +298,16 @@ class Gallery extends ElementController {
     if (this.currentItem != next) {
       _u.addClass('is-active is-transitioning is-transitioning--center', next);
       _u.removeClass('is-active', this.currentItem);
+    }
+
+    if (this.options.pagination) {
+      _u.forEachNode(this.paginationItems, (counter, item) => {
+        if (item.dataset.index == index) {
+          _u.addClass('is-active', item);
+        } else {
+          _u.removeClass('is-active', item);
+        }
+      })
     }
 
     if (typeof this.options.onHasChanged == "function") {
@@ -329,6 +343,13 @@ class Gallery extends ElementController {
     _u.addClass('is-active is-transitioning is-transitioning--center', next);
     _u.removeClass('is-active', this.currentItem);
 
+    if (this.options.pagination) {
+      _u.forEachNode(this.paginationItems, (index, item) => {
+        if (index == next.dataset.index) _u.addClass('is-active', item);
+        else _u.removeClass('is-active', item);
+      });
+    }
+
     if (typeof this.options.onHasChanged == "function") {
       this.options.onHasChanged(next, this.currentItem);
     }
@@ -354,21 +375,6 @@ class Gallery extends ElementController {
     _u.removeClass('is-transitioning--center', this.currentItem);
     _u.addClass('is-transitioning is-transitioning--backward', this.currentItem);
 
-    if (this.paginationList) {
-      let nextIndex;
-
-      if (this.currentIndex == this.items.length - 1) {
-        nextIndex = 0;
-      } else {
-        nextIndex = parseInt(this.currentIndex) + 1;
-      }
-
-      _u.forEachNode(this.paginationList.children, (index, item) => {
-        if (index == nextIndex) _u.addClass('is-active', item);
-        else _u.removeClass('is-active', item);
-      });
-    }
-
     this.move();
 
     return this;
@@ -387,21 +393,6 @@ class Gallery extends ElementController {
 
     _u.removeClass('is-transitioning--center', this.currentItem);
     _u.addClass('is-transitioning is-transitioning--forward', this.currentItem);
-
-    if (this.paginationList) {
-      let prevIndex;
-
-      if (this.currentIndex == 0) {
-        prevIndex = this.items.length - 1;
-      } else {
-        prevIndex = this.currentIndex - 1;
-      }
-
-      _u.forEachNode(this.paginationList.children, (index, item)=> {
-        if (index == prevIndex) _u.addClass('is-active', item);
-        else _u.removeClass('is-active', item);
-      });
-    }
 
     this.move(false);
 

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _wtcUtilityHelpers = _interopRequireDefault(require("wtc-utility-helpers"));
 
@@ -11,9 +11,9 @@ var _wtcUtilityPreloader = _interopRequireDefault(require("wtc-utility-preloader
 
 var _wtcControllerElement = _interopRequireWildcard(require("wtc-controller-element"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -71,14 +71,14 @@ function (_ElementController) {
       draggable: _this.element.getAttribute('data-draggable') == 'true' ? true : false,
       dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
-      paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? document.querySelector(_this.element.getAttribute('data-pagination-target')) : null,
+      paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? _this.element.getAttribute('data-pagination-target') : null,
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
     };
 
     if (options) {
-      _this.options = _wtcUtilityHelpers.default.extend(_this.options, options);
+      _this.options = _wtcUtilityHelpers["default"].extend(_this.options, options);
     }
 
     _this.wrapper = _this.element.querySelector('ul');
@@ -93,9 +93,9 @@ function (_ElementController) {
       _this.prevBtn = document.createElement('button');
       _this.prevBtn.innerHTML = 'Previous';
 
-      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-next', _this.nextBtn);
+      _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
-      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
+      _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
 
       _this.nextBtn.addEventListener('click', _this.next.bind(_assertThisInitialized(_this)));
 
@@ -112,10 +112,10 @@ function (_ElementController) {
       // otherwise, build a generic list of buttons
 
       if (_this.options.paginationTarget) {
-        itemList = _this.options.paginationTarget;
+        itemList = document.querySelector(_this.options.paginationTarget);
         var items = itemList.children;
 
-        _wtcUtilityHelpers.default.forEachNode(items, function (index, el) {
+        _wtcUtilityHelpers["default"].forEachNode(items, function (index, el) {
           el.classList.add('gallery__pagination-item');
           if (!el.dataset.index) el.dataset.index = index;
           if (index === 0) el.classList.add('is-active');
@@ -124,7 +124,7 @@ function (_ElementController) {
       } else {
         itemList = document.createElement('ul');
 
-        _wtcUtilityHelpers.default.forEachNode(_this.items, function (index) {
+        _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index) {
           var item = document.createElement('li'),
               itemBtn = document.createElement('button'),
               itemBtnContent = document.createTextNode(index);
@@ -140,7 +140,9 @@ function (_ElementController) {
       }
 
       _this.paginationList = itemList;
+      _this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
+      console.log(_this.paginationItems);
     } // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
 
@@ -164,23 +166,23 @@ function (_ElementController) {
     } // add base classes
 
 
-    _wtcUtilityHelpers.default.addClass('gallery', _this.element);
+    _wtcUtilityHelpers["default"].addClass('gallery', _this.element);
 
-    _wtcUtilityHelpers.default.addClass('gallery__overlay', _this.overlay);
+    _wtcUtilityHelpers["default"].addClass('gallery__overlay', _this.overlay);
 
-    _wtcUtilityHelpers.default.addClass('gallery__wrapper', _this.wrapper);
+    _wtcUtilityHelpers["default"].addClass('gallery__wrapper', _this.wrapper);
 
-    _wtcUtilityHelpers.default.forEachNode(_this.items, function (index, item) {
-      _wtcUtilityHelpers.default.addClass('gallery__item', item);
+    _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index, item) {
+      _wtcUtilityHelpers["default"].addClass('gallery__item', item);
 
       item.dataset.index = index;
       item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
     }); // add state classes
 
 
-    _wtcUtilityHelpers.default.addClass('is-active', _this.currentItem);
+    _wtcUtilityHelpers["default"].addClass('is-active', _this.currentItem);
 
-    _wtcUtilityHelpers.default.addClass('is-loading', _this.element); // append main element
+    _wtcUtilityHelpers["default"].addClass('is-loading', _this.element); // append main element
 
 
     _this.element.appendChild(_this.overlay); // preload images if any
@@ -189,11 +191,11 @@ function (_ElementController) {
     var images = _this.wrapper.querySelectorAll('img');
 
     if (images.length > 0) {
-      var preloader = new _wtcUtilityPreloader.default({
+      var preloader = new _wtcUtilityPreloader["default"]({
         debug: _this.options.debug
       });
 
-      _wtcUtilityHelpers.default.forEachNode(images, function (index, item) {
+      _wtcUtilityHelpers["default"].forEachNode(images, function (index, item) {
         preloader.add(item.getAttribute('src'), 'image');
       });
 
@@ -218,8 +220,8 @@ function (_ElementController) {
       if (target) {
         var i = target.dataset.index;
 
-        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (i == index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationList.children, function (index, item) {
+          if (i == index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
         });
 
         this.moveByIndex(i);
@@ -274,7 +276,7 @@ function (_ElementController) {
     value: function resize() {
       var newH = 0;
 
-      _wtcUtilityHelpers.default.forEachNode(this.items, function (index, item) {
+      _wtcUtilityHelpers["default"].forEachNode(this.items, function (index, item) {
         var h = item.offsetHeight;
 
         if (h > newH) {
@@ -296,9 +298,9 @@ function (_ElementController) {
       window.addEventListener('resize', this.resize.bind(this));
       this.resize();
 
-      _wtcUtilityHelpers.default.removeClass('is-loading', this.element);
+      _wtcUtilityHelpers["default"].removeClass('is-loading', this.element);
 
-      _wtcUtilityHelpers.default.addClass('is-loaded', this.element);
+      _wtcUtilityHelpers["default"].addClass('is-loaded', this.element);
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -319,7 +321,7 @@ function (_ElementController) {
   }, {
     key: "itemTransitioned",
     value: function itemTransitioned(item) {
-      _wtcUtilityHelpers.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
+      _wtcUtilityHelpers["default"].removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
       return this;
     }
@@ -333,7 +335,10 @@ function (_ElementController) {
     key: "moveByIndex",
     value: function moveByIndex(index) {
       var next = this.items[index];
-      if (this.options.autoplay) clearTimeout(this.player);
+
+      if (this.options.autoplay) {
+        clearTimeout(this.player);
+      }
 
       if (!next) {
         console.warn('No item with index: ' + index);
@@ -341,9 +346,19 @@ function (_ElementController) {
       }
 
       if (this.currentItem != next) {
-        _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+        _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
 
-        _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
+        _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
+      }
+
+      if (this.options.pagination) {
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (counter, item) {
+          if (item.dataset.index == index) {
+            _wtcUtilityHelpers["default"].addClass('is-active', item);
+          } else {
+            _wtcUtilityHelpers["default"].removeClass('is-active', item);
+          }
+        });
       }
 
       if (typeof this.options.onHasChanged == "function") {
@@ -380,9 +395,15 @@ function (_ElementController) {
         next = direction ? this.items[0] : this.items[this.items.length - 1];
       }
 
-      _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+      _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
 
-      _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
+
+      if (this.options.pagination) {
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (index, item) {
+          if (index == next.dataset.index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
+        });
+      }
 
       if (typeof this.options.onHasChanged == "function") {
         this.options.onHasChanged(next, this.currentItem);
@@ -408,23 +429,9 @@ function (_ElementController) {
         this.options.onWillChange(this, true);
       }
 
-      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass('is-transitioning--center', this.currentItem);
 
-      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
-
-      if (this.paginationList) {
-        var nextIndex;
-
-        if (this.currentIndex == this.items.length - 1) {
-          nextIndex = 0;
-        } else {
-          nextIndex = parseInt(this.currentIndex) + 1;
-        }
-
-        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (index == nextIndex) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
-        });
-      }
+      _wtcUtilityHelpers["default"].addClass('is-transitioning is-transitioning--backward', this.currentItem);
 
       this.move();
       return this;
@@ -443,23 +450,9 @@ function (_ElementController) {
         this.options.onWillChange(this, false);
       }
 
-      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass('is-transitioning--center', this.currentItem);
 
-      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
-
-      if (this.paginationList) {
-        var prevIndex;
-
-        if (this.currentIndex == 0) {
-          prevIndex = this.items.length - 1;
-        } else {
-          prevIndex = this.currentIndex - 1;
-        }
-
-        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (index == prevIndex) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
-        });
-      }
+      _wtcUtilityHelpers["default"].addClass('is-transitioning is-transitioning--forward', this.currentItem);
 
       this.move(false);
       return this;
@@ -515,9 +508,9 @@ function (_ElementController) {
   }]);
 
   return Gallery;
-}(_wtcControllerElement.default);
+}(_wtcControllerElement["default"]);
 
 _wtcControllerElement.ExecuteControllers.registerController(Gallery, 'Gallery');
 
 var _default = Gallery;
-exports.default = _default;
+exports["default"] = _default;
