@@ -60,9 +60,9 @@ class Gallery extends ElementController {
     // If nav is set to true, create buttons
     if (this.options.nav) {
       this.nextBtn = document.createElement('button');
-      this.nextBtn.innerHTML = 'Next';
+      this.nextBtn.innerHTML = 'Next <span class="visually-hidden">carousel item.</span>';
       this.prevBtn = document.createElement('button');
-      this.prevBtn.innerHTML = 'Previous';
+      this.prevBtn.innerHTML = 'Previous <span class="visually-hidden">carousel item.</span>';
 
       _u.addClass('gallery__nav gallery__nav-next', this.nextBtn);
       _u.addClass('gallery__nav gallery__nav-prev', this.prevBtn);
@@ -102,8 +102,9 @@ class Gallery extends ElementController {
             itemBtn = document.createElement('button'),
             itemBtnContent = document.createTextNode(index);
 
-          item.classList.add('gallery__pagination-item');
+          _u.addClass('gallery__pagination-item', item);
           item.dataset.index = index;
+          if (index === 0) item.classList.add('is-active');
           item.addEventListener('click', this.handlePagination.bind(this));
           
           itemBtn.appendChild(itemBtnContent);
@@ -117,10 +118,13 @@ class Gallery extends ElementController {
       this.paginationList = itemList;
       this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
-
-      console.log(this.paginationItems)
-
     }
+
+    // create live region for screen-reader to announce slide changes
+    this.liveRegion = document.createElement('div');
+    this.liveRegion.setAttribute('aria-live', 'polite');
+    _u.addClass('visually-hidden', this.liveRegion);
+    this.element.appendChild(this.liveRegion);
 
     // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (this.options.pauseOnHover) {
@@ -147,9 +151,12 @@ class Gallery extends ElementController {
     _u.addClass('gallery', this.element);
     _u.addClass('gallery__overlay', this.overlay);
     _u.addClass('gallery__wrapper', this.wrapper);
+
     _u.forEachNode(this.items, (index, item)=> {
+      if (this.currentIndex !== index) item.setAttribute('aria-hidden', 'true');
       _u.addClass('gallery__item', item);
       item.dataset.index = index;
+      item.setAttribute('tabindex', -1);
       item.addEventListener('transitionend', this.itemTransitioned.bind(this, item));
     });
 
@@ -182,12 +189,16 @@ class Gallery extends ElementController {
   handlePagination(e) {
     let target = e.target.closest('.gallery__pagination-item');
     if (target) {
-      let i = target.dataset.index;
+      let i = +target.dataset.index;
       _u.forEachNode(this.paginationList.children, (index, item)=> {
-        if (i == index) _u.addClass('is-active', item);
+        if (i === index) _u.addClass('is-active', item);
         else _u.removeClass('is-active', item);
       });
       this.moveByIndex(i);
+      
+      // shift focus to active item. note this should only happen on pagination click,
+      // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
+      this.currentItem.focus();
     }
   }
 
@@ -298,6 +309,8 @@ class Gallery extends ElementController {
     if (this.currentItem != next) {
       _u.addClass('is-active is-transitioning is-transitioning--center', next);
       _u.removeClass('is-active', this.currentItem);
+      this.currentItem.setAttribute('aria-hidden', 'true');
+      next.removeAttribute('aria-hidden');
     }
 
     if (this.options.pagination) {
@@ -314,6 +327,7 @@ class Gallery extends ElementController {
       this.options.onHasChanged(next, this.currentItem);
     }
 
+    this.liveRegion.innerHTML = `Active carousel item: ${index + 1} of ${this.items.length}.`;
     this.currentItem = next;
     this.currentIndex = index;
 
@@ -343,6 +357,9 @@ class Gallery extends ElementController {
     _u.addClass('is-active is-transitioning is-transitioning--center', next);
     _u.removeClass('is-active', this.currentItem);
 
+    this.currentItem.setAttribute('aria-hidden', 'true');
+    next.removeAttribute('aria-hidden');
+
     if (this.options.pagination) {
       _u.forEachNode(this.paginationItems, (index, item) => {
         if (index == next.dataset.index) _u.addClass('is-active', item);
@@ -355,9 +372,12 @@ class Gallery extends ElementController {
     }
     
     this.currentItem = next;
+    this.currentIndex = +next.dataset.index;
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
+    } else {
+      this.liveRegion.innerHTML = `Active carousel item: ${this.currentIndex + 1} of ${this.items.length}.`;
     }
   }
 

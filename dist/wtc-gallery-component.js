@@ -89,9 +89,9 @@ function (_ElementController) {
 
     if (_this.options.nav) {
       _this.nextBtn = document.createElement('button');
-      _this.nextBtn.innerHTML = 'Next';
+      _this.nextBtn.innerHTML = 'Next <span class="visually-hidden">carousel item.</span>';
       _this.prevBtn = document.createElement('button');
-      _this.prevBtn.innerHTML = 'Previous';
+      _this.prevBtn.innerHTML = 'Previous <span class="visually-hidden">carousel item.</span>';
 
       _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
@@ -128,8 +128,11 @@ function (_ElementController) {
           var item = document.createElement('li'),
               itemBtn = document.createElement('button'),
               itemBtnContent = document.createTextNode(index);
-          item.classList.add('gallery__pagination-item');
+
+          _wtcUtilityHelpers["default"].addClass('gallery__pagination-item', item);
+
           item.dataset.index = index;
+          if (index === 0) item.classList.add('is-active');
           item.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
@@ -142,8 +145,16 @@ function (_ElementController) {
       _this.paginationList = itemList;
       _this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
-      console.log(_this.paginationItems);
-    } // Add pause-on-hover pointer events. Including a fallback to mouse events.
+    } // create live region for screen-reader to announce slide changes
+
+
+    _this.liveRegion = document.createElement('div');
+
+    _this.liveRegion.setAttribute('aria-live', 'polite');
+
+    _wtcUtilityHelpers["default"].addClass('visually-hidden', _this.liveRegion);
+
+    _this.element.appendChild(_this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
 
     if (_this.options.pauseOnHover) {
@@ -173,9 +184,12 @@ function (_ElementController) {
     _wtcUtilityHelpers["default"].addClass('gallery__wrapper', _this.wrapper);
 
     _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index, item) {
+      if (_this.currentIndex !== index) item.setAttribute('aria-hidden', 'true');
+
       _wtcUtilityHelpers["default"].addClass('gallery__item', item);
 
       item.dataset.index = index;
+      item.setAttribute('tabindex', -1);
       item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
     }); // add state classes
 
@@ -218,13 +232,16 @@ function (_ElementController) {
       var target = e.target.closest('.gallery__pagination-item');
 
       if (target) {
-        var i = target.dataset.index;
+        var i = +target.dataset.index;
 
         _wtcUtilityHelpers["default"].forEachNode(this.paginationList.children, function (index, item) {
-          if (i == index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
+          if (i === index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
         });
 
-        this.moveByIndex(i);
+        this.moveByIndex(i); // shift focus to active item. note this should only happen on pagination click,
+        // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
+
+        this.currentItem.focus();
       }
     }
     /**
@@ -349,6 +366,9 @@ function (_ElementController) {
         _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
 
         _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
+
+        this.currentItem.setAttribute('aria-hidden', 'true');
+        next.removeAttribute('aria-hidden');
       }
 
       if (this.options.pagination) {
@@ -365,6 +385,7 @@ function (_ElementController) {
         this.options.onHasChanged(next, this.currentItem);
       }
 
+      this.liveRegion.innerHTML = "Active carousel item: ".concat(index + 1, " of ").concat(this.items.length, ".");
       this.currentItem = next;
       this.currentIndex = index;
 
@@ -399,6 +420,9 @@ function (_ElementController) {
 
       _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
 
+      this.currentItem.setAttribute('aria-hidden', 'true');
+      next.removeAttribute('aria-hidden');
+
       if (this.options.pagination) {
         _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (index, item) {
           if (index == next.dataset.index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
@@ -410,9 +434,12 @@ function (_ElementController) {
       }
 
       this.currentItem = next;
+      this.currentIndex = +next.dataset.index;
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
+      } else {
+        this.liveRegion.innerHTML = "Active carousel item: ".concat(this.currentIndex + 1, " of ").concat(this.items.length, ".");
       }
     }
     /**
