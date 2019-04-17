@@ -21,10 +21,14 @@ class Gallery extends ElementController {
    * @param {(boolean|string)} options.autoplay - auto-advances the gallery
    * @param {number} options.delay - duration (in miliseconds) between gallery transitions
    * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.loop - enables left or right navigation, when the user reaches the first or last gallery item, respectively.
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
    * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
    * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {string} options.nextBtnMarkup - markup to override the default "next button" content
+   * @param {string} options.prevBtnMarkup - markup to override the default "previous button" content
+   * @param {string} options.liveRegionText - markup to override the default aria-live region content
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -38,10 +42,14 @@ class Gallery extends ElementController {
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
+      loop: (this.element.getAttribute('data-loop') == 'true') ? true : false,
       draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
       dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
       paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? this.element.getAttribute('data-pagination-target') : null,
+      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -60,9 +68,9 @@ class Gallery extends ElementController {
     // If nav is set to true, create buttons
     if (this.options.nav) {
       this.nextBtn = document.createElement('button');
-      this.nextBtn.innerHTML = 'Next <span class="visually-hidden">carousel item.</span>';
+      this.nextBtn.innerHTML = this.options.nextBtnMarkup;
       this.prevBtn = document.createElement('button');
-      this.prevBtn.innerHTML = 'Previous <span class="visually-hidden">carousel item.</span>';
+      this.prevBtn.innerHTML = this.options.prevBtnMarkup;
 
       _u.addClass('gallery__nav gallery__nav-next', this.nextBtn);
       _u.addClass('gallery__nav gallery__nav-prev', this.prevBtn);
@@ -327,9 +335,20 @@ class Gallery extends ElementController {
       this.options.onHasChanged(next, this.currentItem);
     }
 
-    this.liveRegion.innerHTML = `Active carousel item: ${index + 1} of ${this.items.length}.`;
+    this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${index + 1} of ${this.items.length}.`;
     this.currentItem = next;
     this.currentIndex = index;
+
+    if (!this.options.loop) {
+      if (this.currentIndex == this.items.length - 1) {
+        this.nextBtn.setAttribute('disabled', true);
+      } else if (this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      } else {
+        this.nextBtn.removeAttribute('disabled');
+        this.prevBtn.removeAttribute('disabled');
+      }
+    }
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -374,10 +393,21 @@ class Gallery extends ElementController {
     this.currentItem = next;
     this.currentIndex = +next.dataset.index;
 
+    if (!this.options.loop) {
+      if (this.currentIndex == this.items.length - 1) {
+        this.nextBtn.setAttribute('disabled', true);
+      } else if (this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      } else {
+        this.nextBtn.removeAttribute('disabled');
+        this.prevBtn.removeAttribute('disabled');
+      }
+    }
+
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
     } else {
-      this.liveRegion.innerHTML = `Active carousel item: ${this.currentIndex + 1} of ${this.items.length}.`;
+      this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${this.currentIndex + 1} of ${this.items.length}.`;
     }
   }
 

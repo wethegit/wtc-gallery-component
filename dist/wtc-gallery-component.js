@@ -46,10 +46,14 @@ function (_ElementController) {
    * @param {(boolean|string)} options.autoplay - auto-advances the gallery
    * @param {number} options.delay - duration (in miliseconds) between gallery transitions
    * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.loop - enables left or right navigation, when the user reaches the first or last gallery item, respectively.
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
    * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
    * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {string} options.nextBtnMarkup - markup to override the default "next button" content
+   * @param {string} options.prevBtnMarkup - markup to override the default "previous button" content
+   * @param {string} options.liveRegionText - markup to override the default aria-live region content
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -68,10 +72,14 @@ function (_ElementController) {
       autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
       delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: _this.element.getAttribute('data-pause-on-hover') == 'true' ? true : false,
+      loop: _this.element.getAttribute('data-loop') == 'true' ? true : false,
       draggable: _this.element.getAttribute('data-draggable') == 'true' ? true : false,
       dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
       paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? _this.element.getAttribute('data-pagination-target') : null,
+      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -89,9 +97,9 @@ function (_ElementController) {
 
     if (_this.options.nav) {
       _this.nextBtn = document.createElement('button');
-      _this.nextBtn.innerHTML = 'Next <span class="visually-hidden">carousel item.</span>';
+      _this.nextBtn.innerHTML = _this.options.nextBtnMarkup;
       _this.prevBtn = document.createElement('button');
-      _this.prevBtn.innerHTML = 'Previous <span class="visually-hidden">carousel item.</span>';
+      _this.prevBtn.innerHTML = _this.options.prevBtnMarkup;
 
       _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
@@ -385,9 +393,20 @@ function (_ElementController) {
         this.options.onHasChanged(next, this.currentItem);
       }
 
-      this.liveRegion.innerHTML = "Active carousel item: ".concat(index + 1, " of ").concat(this.items.length, ".");
+      this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(index + 1, " of ").concat(this.items.length, ".");
       this.currentItem = next;
       this.currentIndex = index;
+
+      if (!this.options.loop) {
+        if (this.currentIndex == this.items.length - 1) {
+          this.nextBtn.setAttribute('disabled', true);
+        } else if (this.currentIndex == 0) {
+          this.prevBtn.setAttribute('disabled', true);
+        } else {
+          this.nextBtn.removeAttribute('disabled');
+          this.prevBtn.removeAttribute('disabled');
+        }
+      }
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -436,10 +455,21 @@ function (_ElementController) {
       this.currentItem = next;
       this.currentIndex = +next.dataset.index;
 
+      if (!this.options.loop) {
+        if (this.currentIndex == this.items.length - 1) {
+          this.nextBtn.setAttribute('disabled', true);
+        } else if (this.currentIndex == 0) {
+          this.prevBtn.setAttribute('disabled', true);
+        } else {
+          this.nextBtn.removeAttribute('disabled');
+          this.prevBtn.removeAttribute('disabled');
+        }
+      }
+
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
       } else {
-        this.liveRegion.innerHTML = "Active carousel item: ".concat(this.currentIndex + 1, " of ").concat(this.items.length, ".");
+        this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(this.currentIndex + 1, " of ").concat(this.items.length, ".");
       }
     }
     /**
