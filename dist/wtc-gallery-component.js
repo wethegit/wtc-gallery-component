@@ -331,6 +331,10 @@ function (_ElementController) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
       }
 
+      if (this.options.nav && !this.options.loop && this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      }
+
       if (typeof this.onLoad == "function") {
         return this.onLoad(this);
       }
