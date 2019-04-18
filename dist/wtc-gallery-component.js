@@ -109,9 +109,9 @@ function (_ElementController) {
 
       _this.prevBtn.addEventListener('click', _this.prev.bind(_assertThisInitialized(_this)));
 
-      _this.element.appendChild(_this.nextBtn);
+      _this.wrapper.insertAdjacentElement('afterend', _this.nextBtn);
 
-      _this.element.appendChild(_this.prevBtn);
+      _this.wrapper.insertAdjacentElement('afterend', _this.prevBtn);
     } // If pagination is set to true, set up the item list
 
 
@@ -156,13 +156,13 @@ function (_ElementController) {
     } // create live region for screen-reader to announce slide changes
 
 
-    _this.liveRegion = document.createElement('div');
+    _this.liveRegion = document.createElement('p');
 
     _this.liveRegion.setAttribute('aria-live', 'polite');
 
     _wtcUtilityHelpers["default"].addClass('visually-hidden', _this.liveRegion);
 
-    _this.element.appendChild(_this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
+    _this.element.insertAdjacentElement('afterbegin', _this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
 
     if (_this.options.pauseOnHover) {
@@ -192,12 +192,22 @@ function (_ElementController) {
     _wtcUtilityHelpers["default"].addClass('gallery__wrapper', _this.wrapper);
 
     _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index, item) {
-      if (_this.currentIndex !== index) item.setAttribute('aria-hidden', 'true');
-
       _wtcUtilityHelpers["default"].addClass('gallery__item', item);
 
       item.dataset.index = index;
       item.setAttribute('tabindex', -1);
+
+      if (_this.currentIndex !== index) {
+        // "hide" any focusable children on inactive elements
+        var focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
+
+        _wtcUtilityHelpers["default"].forEachNode(focusableChildren, function (i, focusable) {
+          focusable.setAttribute('tabindex', -1);
+        });
+
+        item.setAttribute('aria-hidden', 'true');
+      }
+
       item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
     }); // add state classes
 
@@ -276,7 +286,7 @@ function (_ElementController) {
   }, {
     key: "draggablePointerUp",
     value: function draggablePointerUp(e) {
-      if (e.target.closest('button')) {
+      if (e.target.closest('button') || e.target.closest('[href]')) {
         return;
       } else {
         e.preventDefault();
@@ -375,12 +385,12 @@ function (_ElementController) {
       }
 
       if (this.currentItem != next) {
+        this.currentItem.setAttribute('aria-hidden', 'true');
+        next.removeAttribute('aria-hidden');
+
         _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
 
         _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
-
-        this.currentItem.setAttribute('aria-hidden', 'true');
-        next.removeAttribute('aria-hidden');
       }
 
       if (this.options.pagination) {

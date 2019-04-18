@@ -7,9 +7,10 @@
  * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
  * @created Nov 30, 2016
  */
+
 import _u from 'wtc-utility-helpers';
 import Preloader from 'wtc-utility-preloader';
-import {default as ElementController, ExecuteControllers}  from 'wtc-controller-element';
+import {default as ElementController, ExecuteControllers} from 'wtc-controller-element';
 
 class Gallery extends ElementController {
 
@@ -78,8 +79,8 @@ class Gallery extends ElementController {
       this.nextBtn.addEventListener('click', this.next.bind(this));
       this.prevBtn.addEventListener('click', this.prev.bind(this));
 
-      this.element.appendChild(this.nextBtn);
-      this.element.appendChild(this.prevBtn);
+      this.wrapper.insertAdjacentElement('afterend', this.nextBtn);
+      this.wrapper.insertAdjacentElement('afterend', this.prevBtn);
     }
 
     // If pagination is set to true, set up the item list
@@ -129,10 +130,10 @@ class Gallery extends ElementController {
     }
 
     // create live region for screen-reader to announce slide changes
-    this.liveRegion = document.createElement('div');
+    this.liveRegion = document.createElement('p');
     this.liveRegion.setAttribute('aria-live', 'polite');
     _u.addClass('visually-hidden', this.liveRegion);
-    this.element.appendChild(this.liveRegion);
+    this.element.insertAdjacentElement('afterbegin', this.liveRegion);
 
     // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (this.options.pauseOnHover) {
@@ -161,10 +162,20 @@ class Gallery extends ElementController {
     _u.addClass('gallery__wrapper', this.wrapper);
 
     _u.forEachNode(this.items, (index, item)=> {
-      if (this.currentIndex !== index) item.setAttribute('aria-hidden', 'true');
       _u.addClass('gallery__item', item);
       item.dataset.index = index;
       item.setAttribute('tabindex', -1);
+
+      if (this.currentIndex !== index) {
+        // "hide" any focusable children on inactive elements
+        let focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
+        _u.forEachNode(focusableChildren, (i, focusable) => {
+          focusable.setAttribute('tabindex', -1);
+        });
+
+        item.setAttribute('aria-hidden', 'true');
+      }
+
       item.addEventListener('transitionend', this.itemTransitioned.bind(this, item));
     });
 
@@ -229,7 +240,7 @@ class Gallery extends ElementController {
    * @param {Object} e - the event object
    */
   draggablePointerUp(e) {
-    if (e.target.closest('button')) {
+    if (e.target.closest('button') || e.target.closest('[href]')) {
       return;
     } else {
       e.preventDefault();
@@ -278,7 +289,7 @@ class Gallery extends ElementController {
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
     }
-
+    
     if (this.options.nav && !this.options.loop && this.currentIndex == 0) { 
       this.prevBtn.setAttribute('disabled', true);
     }
@@ -319,10 +330,10 @@ class Gallery extends ElementController {
     }
 
     if (this.currentItem != next) {
-      _u.addClass('is-active is-transitioning is-transitioning--center', next);
-      _u.removeClass('is-active', this.currentItem);
       this.currentItem.setAttribute('aria-hidden', 'true');
       next.removeAttribute('aria-hidden');
+      _u.addClass('is-active is-transitioning is-transitioning--center', next);
+      _u.removeClass('is-active', this.currentItem);
     }
 
     if (this.options.pagination) {

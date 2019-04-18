@@ -71,6 +71,20 @@
   opacity: 1;
 }
 
+
+/* focusable child elements */
+.gallery__item button,
+.gallery__item [href],
+.gallery__item [tabindex] {
+  visibility: hidden;
+}
+
+.gallery__item.is-active button,
+.gallery__item.is-active [href],
+.gallery__item.is-active [tabindex] {
+  visibility: visible;
+}
+
 .gallery__overlay {
   transition: opacity 0.4s ease;
   background-color: white;
