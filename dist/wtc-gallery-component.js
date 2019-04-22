@@ -46,10 +46,14 @@ function (_ElementController) {
    * @param {(boolean|string)} options.autoplay - auto-advances the gallery
    * @param {number} options.delay - duration (in miliseconds) between gallery transitions
    * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.loop - enables left or right navigation, when the user reaches the first or last gallery item, respectively.
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
    * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
    * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {string} options.nextBtnMarkup - markup to override the default "next button" content
+   * @param {string} options.prevBtnMarkup - markup to override the default "previous button" content
+   * @param {string} options.liveRegionText - markup to override the default aria-live region content
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -68,10 +72,14 @@ function (_ElementController) {
       autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
       delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: _this.element.getAttribute('data-pause-on-hover') == 'true' ? true : false,
+      loop: _this.element.getAttribute('data-loop') == 'true' ? true : false,
       draggable: _this.element.getAttribute('data-draggable') == 'true' ? true : false,
       dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
       paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? _this.element.getAttribute('data-pagination-target') : null,
+      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -89,9 +97,9 @@ function (_ElementController) {
 
     if (_this.options.nav) {
       _this.nextBtn = document.createElement('button');
-      _this.nextBtn.innerHTML = 'Next';
+      _this.nextBtn.innerHTML = _this.options.nextBtnMarkup;
       _this.prevBtn = document.createElement('button');
-      _this.prevBtn.innerHTML = 'Previous';
+      _this.prevBtn.innerHTML = _this.options.prevBtnMarkup;
 
       _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
@@ -101,9 +109,9 @@ function (_ElementController) {
 
       _this.prevBtn.addEventListener('click', _this.prev.bind(_assertThisInitialized(_this)));
 
-      _this.element.appendChild(_this.nextBtn);
+      _this.wrapper.insertAdjacentElement('afterend', _this.nextBtn);
 
-      _this.element.appendChild(_this.prevBtn);
+      _this.wrapper.insertAdjacentElement('afterend', _this.prevBtn);
     } // If pagination is set to true, set up the item list
 
 
@@ -128,8 +136,11 @@ function (_ElementController) {
           var item = document.createElement('li'),
               itemBtn = document.createElement('button'),
               itemBtnContent = document.createTextNode(index);
-          item.classList.add('gallery__pagination-item');
+
+          _wtcUtilityHelpers["default"].addClass('gallery__pagination-item', item);
+
           item.dataset.index = index;
+          if (index === 0) item.classList.add('is-active');
           item.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
@@ -142,8 +153,16 @@ function (_ElementController) {
       _this.paginationList = itemList;
       _this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
-      console.log(_this.paginationItems);
-    } // Add pause-on-hover pointer events. Including a fallback to mouse events.
+    } // create live region for screen-reader to announce slide changes
+
+
+    _this.liveRegion = document.createElement('p');
+
+    _this.liveRegion.setAttribute('aria-live', 'polite');
+
+    _wtcUtilityHelpers["default"].addClass('visually-hidden', _this.liveRegion);
+
+    _this.element.insertAdjacentElement('afterbegin', _this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
 
     if (_this.options.pauseOnHover) {
@@ -176,6 +195,19 @@ function (_ElementController) {
       _wtcUtilityHelpers["default"].addClass('gallery__item', item);
 
       item.dataset.index = index;
+      item.setAttribute('tabindex', -1);
+
+      if (_this.currentIndex !== index) {
+        // "hide" any focusable children on inactive elements
+        var focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
+
+        _wtcUtilityHelpers["default"].forEachNode(focusableChildren, function (i, focusable) {
+          focusable.setAttribute('tabindex', -1);
+        });
+
+        item.setAttribute('aria-hidden', 'true');
+      }
+
       item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
     }); // add state classes
 
@@ -218,13 +250,16 @@ function (_ElementController) {
       var target = e.target.closest('.gallery__pagination-item');
 
       if (target) {
-        var i = target.dataset.index;
+        var i = +target.dataset.index;
 
         _wtcUtilityHelpers["default"].forEachNode(this.paginationList.children, function (index, item) {
-          if (i == index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
+          if (i === index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
         });
 
-        this.moveByIndex(i);
+        this.moveByIndex(i); // shift focus to active item. note this should only happen on pagination click,
+        // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
+
+        this.currentItem.focus();
       }
     }
     /**
@@ -251,7 +286,7 @@ function (_ElementController) {
   }, {
     key: "draggablePointerUp",
     value: function draggablePointerUp(e) {
-      if (e.target.closest('button')) {
+      if (e.target.closest('button') || e.target.closest('[href]')) {
         return;
       } else {
         e.preventDefault();
@@ -306,6 +341,10 @@ function (_ElementController) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
       }
 
+      if (this.options.nav && !this.options.loop && this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      }
+
       if (typeof this.onLoad == "function") {
         return this.onLoad(this);
       }
@@ -346,6 +385,9 @@ function (_ElementController) {
       }
 
       if (this.currentItem != next) {
+        this.currentItem.setAttribute('aria-hidden', 'true');
+        next.removeAttribute('aria-hidden');
+
         _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
 
         _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
@@ -365,8 +407,20 @@ function (_ElementController) {
         this.options.onHasChanged(next, this.currentItem);
       }
 
+      this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(index + 1, " of ").concat(this.items.length, ".");
       this.currentItem = next;
       this.currentIndex = index;
+
+      if (!this.options.loop) {
+        if (this.currentIndex == this.items.length - 1) {
+          this.nextBtn.setAttribute('disabled', true);
+        } else if (this.currentIndex == 0) {
+          this.prevBtn.setAttribute('disabled', true);
+        } else {
+          this.nextBtn.removeAttribute('disabled');
+          this.prevBtn.removeAttribute('disabled');
+        }
+      }
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -399,6 +453,9 @@ function (_ElementController) {
 
       _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
 
+      this.currentItem.setAttribute('aria-hidden', 'true');
+      next.removeAttribute('aria-hidden');
+
       if (this.options.pagination) {
         _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (index, item) {
           if (index == next.dataset.index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
@@ -410,9 +467,23 @@ function (_ElementController) {
       }
 
       this.currentItem = next;
+      this.currentIndex = +next.dataset.index;
+
+      if (!this.options.loop) {
+        if (this.currentIndex == this.items.length - 1) {
+          this.nextBtn.setAttribute('disabled', true);
+        } else if (this.currentIndex == 0) {
+          this.prevBtn.setAttribute('disabled', true);
+        } else {
+          this.nextBtn.removeAttribute('disabled');
+          this.prevBtn.removeAttribute('disabled');
+        }
+      }
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
+      } else {
+        this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(this.currentIndex + 1, " of ").concat(this.items.length, ".");
       }
     }
     /**

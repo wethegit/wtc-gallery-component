@@ -7,9 +7,10 @@
  * @requirements wtc-utility-helpers, wtc-utility-preloader, wtc-controller-element
  * @created Nov 30, 2016
  */
+
 import _u from 'wtc-utility-helpers';
 import Preloader from 'wtc-utility-preloader';
-import {default as ElementController, ExecuteControllers}  from 'wtc-controller-element';
+import {default as ElementController, ExecuteControllers} from 'wtc-controller-element';
 
 class Gallery extends ElementController {
 
@@ -21,10 +22,14 @@ class Gallery extends ElementController {
    * @param {(boolean|string)} options.autoplay - auto-advances the gallery
    * @param {number} options.delay - duration (in miliseconds) between gallery transitions
    * @param {(boolean|string)} options.pauseOnHover - pauses autoplay behvior when mouse/touch enters the gallery area
+   * @param {(boolean|string)} options.loop - enables left or right navigation, when the user reaches the first or last gallery item, respectively.
    * @param {(boolean|string)} options.draggable - adds basic click-and-drag/swipe functionality to transition between gallery items
    * @param {number} options.dragThreshold - minimum distance (in pixels) for a "drag" action to occur
    * @param {(boolean|string)} options.pagination - creates a barebones navigation list of gallery items
    * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
+   * @param {string} options.nextBtnMarkup - markup to override the default "next button" content
+   * @param {string} options.prevBtnMarkup - markup to override the default "previous button" content
+   * @param {string} options.liveRegionText - markup to override the default aria-live region content
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -38,10 +43,14 @@ class Gallery extends ElementController {
       autoplay: (this.element.getAttribute('data-autoplay') == 'true') ? true : false,
       delay: (parseInt(this.element.getAttribute('data-delay')) > 0) ? parseInt(this.element.getAttribute('data-delay')) : 5000,
       pauseOnHover: (this.element.getAttribute('data-pause-on-hover') == 'true') ? true : false,
+      loop: (this.element.getAttribute('data-loop') == 'true') ? true : false,
       draggable: (this.element.getAttribute('data-draggable') == 'true') ? true : false,
       dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
       paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? this.element.getAttribute('data-pagination-target') : null,
+      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
@@ -60,9 +69,9 @@ class Gallery extends ElementController {
     // If nav is set to true, create buttons
     if (this.options.nav) {
       this.nextBtn = document.createElement('button');
-      this.nextBtn.innerHTML = 'Next';
+      this.nextBtn.innerHTML = this.options.nextBtnMarkup;
       this.prevBtn = document.createElement('button');
-      this.prevBtn.innerHTML = 'Previous';
+      this.prevBtn.innerHTML = this.options.prevBtnMarkup;
 
       _u.addClass('gallery__nav gallery__nav-next', this.nextBtn);
       _u.addClass('gallery__nav gallery__nav-prev', this.prevBtn);
@@ -70,8 +79,8 @@ class Gallery extends ElementController {
       this.nextBtn.addEventListener('click', this.next.bind(this));
       this.prevBtn.addEventListener('click', this.prev.bind(this));
 
-      this.element.appendChild(this.nextBtn);
-      this.element.appendChild(this.prevBtn);
+      this.wrapper.insertAdjacentElement('afterend', this.nextBtn);
+      this.wrapper.insertAdjacentElement('afterend', this.prevBtn);
     }
 
     // If pagination is set to true, set up the item list
@@ -102,8 +111,9 @@ class Gallery extends ElementController {
             itemBtn = document.createElement('button'),
             itemBtnContent = document.createTextNode(index);
 
-          item.classList.add('gallery__pagination-item');
+          _u.addClass('gallery__pagination-item', item);
           item.dataset.index = index;
+          if (index === 0) item.classList.add('is-active');
           item.addEventListener('click', this.handlePagination.bind(this));
           
           itemBtn.appendChild(itemBtnContent);
@@ -117,10 +127,13 @@ class Gallery extends ElementController {
       this.paginationList = itemList;
       this.paginationItems = itemList.children;
       itemList.classList.add('gallery__pagination');
-
-      console.log(this.paginationItems)
-
     }
+
+    // create live region for screen-reader to announce slide changes
+    this.liveRegion = document.createElement('p');
+    this.liveRegion.setAttribute('aria-live', 'polite');
+    _u.addClass('visually-hidden', this.liveRegion);
+    this.element.insertAdjacentElement('afterbegin', this.liveRegion);
 
     // Add pause-on-hover pointer events. Including a fallback to mouse events.
     if (this.options.pauseOnHover) {
@@ -147,9 +160,22 @@ class Gallery extends ElementController {
     _u.addClass('gallery', this.element);
     _u.addClass('gallery__overlay', this.overlay);
     _u.addClass('gallery__wrapper', this.wrapper);
+
     _u.forEachNode(this.items, (index, item)=> {
       _u.addClass('gallery__item', item);
       item.dataset.index = index;
+      item.setAttribute('tabindex', -1);
+
+      if (this.currentIndex !== index) {
+        // "hide" any focusable children on inactive elements
+        let focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
+        _u.forEachNode(focusableChildren, (i, focusable) => {
+          focusable.setAttribute('tabindex', -1);
+        });
+
+        item.setAttribute('aria-hidden', 'true');
+      }
+
       item.addEventListener('transitionend', this.itemTransitioned.bind(this, item));
     });
 
@@ -182,12 +208,16 @@ class Gallery extends ElementController {
   handlePagination(e) {
     let target = e.target.closest('.gallery__pagination-item');
     if (target) {
-      let i = target.dataset.index;
+      let i = +target.dataset.index;
       _u.forEachNode(this.paginationList.children, (index, item)=> {
-        if (i == index) _u.addClass('is-active', item);
+        if (i === index) _u.addClass('is-active', item);
         else _u.removeClass('is-active', item);
       });
       this.moveByIndex(i);
+      
+      // shift focus to active item. note this should only happen on pagination click,
+      // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
+      this.currentItem.focus();
     }
   }
 
@@ -210,7 +240,7 @@ class Gallery extends ElementController {
    * @param {Object} e - the event object
    */
   draggablePointerUp(e) {
-    if (e.target.closest('button')) {
+    if (e.target.closest('button') || e.target.closest('[href]')) {
       return;
     } else {
       e.preventDefault();
@@ -259,6 +289,10 @@ class Gallery extends ElementController {
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
     }
+    
+    if (this.options.nav && !this.options.loop && this.currentIndex == 0) { 
+      this.prevBtn.setAttribute('disabled', true);
+    }
 
     if (typeof this.onLoad == "function") {
       return this.onLoad(this);
@@ -296,6 +330,8 @@ class Gallery extends ElementController {
     }
 
     if (this.currentItem != next) {
+      this.currentItem.setAttribute('aria-hidden', 'true');
+      next.removeAttribute('aria-hidden');
       _u.addClass('is-active is-transitioning is-transitioning--center', next);
       _u.removeClass('is-active', this.currentItem);
     }
@@ -314,8 +350,20 @@ class Gallery extends ElementController {
       this.options.onHasChanged(next, this.currentItem);
     }
 
+    this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${index + 1} of ${this.items.length}.`;
     this.currentItem = next;
     this.currentIndex = index;
+
+    if (!this.options.loop) {
+      if (this.currentIndex == this.items.length - 1) {
+        this.nextBtn.setAttribute('disabled', true);
+      } else if (this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      } else {
+        this.nextBtn.removeAttribute('disabled');
+        this.prevBtn.removeAttribute('disabled');
+      }
+    }
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -343,6 +391,9 @@ class Gallery extends ElementController {
     _u.addClass('is-active is-transitioning is-transitioning--center', next);
     _u.removeClass('is-active', this.currentItem);
 
+    this.currentItem.setAttribute('aria-hidden', 'true');
+    next.removeAttribute('aria-hidden');
+
     if (this.options.pagination) {
       _u.forEachNode(this.paginationItems, (index, item) => {
         if (index == next.dataset.index) _u.addClass('is-active', item);
@@ -355,9 +406,23 @@ class Gallery extends ElementController {
     }
     
     this.currentItem = next;
+    this.currentIndex = +next.dataset.index;
+
+    if (!this.options.loop) {
+      if (this.currentIndex == this.items.length - 1) {
+        this.nextBtn.setAttribute('disabled', true);
+      } else if (this.currentIndex == 0) {
+        this.prevBtn.setAttribute('disabled', true);
+      } else {
+        this.nextBtn.removeAttribute('disabled');
+        this.prevBtn.removeAttribute('disabled');
+      }
+    }
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
+    } else {
+      this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${this.currentIndex + 1} of ${this.items.length}.`;
     }
   }
 
