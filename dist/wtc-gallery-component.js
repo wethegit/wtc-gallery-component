@@ -77,9 +77,9 @@ function (_ElementController) {
       dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
       paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? _this.element.getAttribute('data-pagination-target') : null,
-      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
-      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
-      liveRegionText: 'Active carousel item',
+      nextBtnMarkup: _this.element.getAttribute('data-next-btn-markup') ? _this.element.getAttribute('data-next-btn-markup') : 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: _this.element.getAttribute('data-prev-btn-markup') ? _this.element.getAttribute('data-prev-btn-markup') : 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: _this.element.getAttribute('data-live-region-text') ? _this.element.getAttribute('data-live-region-text') : 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
