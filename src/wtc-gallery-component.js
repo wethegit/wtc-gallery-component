@@ -294,8 +294,8 @@ class Gallery extends ElementController {
       this.prevBtn.setAttribute('disabled', true);
     }
 
-    if (typeof this.onLoad == "function") {
-      return this.onLoad(this);
+    if (typeof this.options.onLoad == "function") {
+      this.options.onLoad(this);
     }
 
     return this;

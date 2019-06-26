@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _wtcUtilityHelpers = _interopRequireDefault(require("wtc-utility-helpers"));
 
@@ -11,9 +11,9 @@ var _wtcUtilityPreloader = _interopRequireDefault(require("wtc-utility-preloader
 
 var _wtcControllerElement = _interopRequireWildcard(require("wtc-controller-element"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -86,7 +86,7 @@ function (_ElementController) {
     };
 
     if (options) {
-      _this.options = _wtcUtilityHelpers["default"].extend(_this.options, options);
+      _this.options = _wtcUtilityHelpers.default.extend(_this.options, options);
     }
 
     _this.wrapper = _this.element.querySelector('ul');
@@ -101,9 +101,9 @@ function (_ElementController) {
       _this.prevBtn = document.createElement('button');
       _this.prevBtn.innerHTML = _this.options.prevBtnMarkup;
 
-      _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-next', _this.nextBtn);
+      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-next', _this.nextBtn);
 
-      _wtcUtilityHelpers["default"].addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
+      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
 
       _this.nextBtn.addEventListener('click', _this.next.bind(_assertThisInitialized(_this)));
 
@@ -123,7 +123,7 @@ function (_ElementController) {
         itemList = document.querySelector(_this.options.paginationTarget);
         var items = itemList.children;
 
-        _wtcUtilityHelpers["default"].forEachNode(items, function (index, el) {
+        _wtcUtilityHelpers.default.forEachNode(items, function (index, el) {
           el.classList.add('gallery__pagination-item');
           if (!el.dataset.index) el.dataset.index = index;
           if (index === 0) el.classList.add('is-active');
@@ -132,12 +132,12 @@ function (_ElementController) {
       } else {
         itemList = document.createElement('ul');
 
-        _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index) {
+        _wtcUtilityHelpers.default.forEachNode(_this.items, function (index) {
           var item = document.createElement('li'),
               itemBtn = document.createElement('button'),
               itemBtnContent = document.createTextNode(index);
 
-          _wtcUtilityHelpers["default"].addClass('gallery__pagination-item', item);
+          _wtcUtilityHelpers.default.addClass('gallery__pagination-item', item);
 
           item.dataset.index = index;
           if (index === 0) item.classList.add('is-active');
@@ -160,7 +160,7 @@ function (_ElementController) {
 
     _this.liveRegion.setAttribute('aria-live', 'polite');
 
-    _wtcUtilityHelpers["default"].addClass('visually-hidden', _this.liveRegion);
+    _wtcUtilityHelpers.default.addClass('visually-hidden', _this.liveRegion);
 
     _this.element.insertAdjacentElement('afterbegin', _this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
@@ -185,14 +185,14 @@ function (_ElementController) {
     } // add base classes
 
 
-    _wtcUtilityHelpers["default"].addClass('gallery', _this.element);
+    _wtcUtilityHelpers.default.addClass('gallery', _this.element);
 
-    _wtcUtilityHelpers["default"].addClass('gallery__overlay', _this.overlay);
+    _wtcUtilityHelpers.default.addClass('gallery__overlay', _this.overlay);
 
-    _wtcUtilityHelpers["default"].addClass('gallery__wrapper', _this.wrapper);
+    _wtcUtilityHelpers.default.addClass('gallery__wrapper', _this.wrapper);
 
-    _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index, item) {
-      _wtcUtilityHelpers["default"].addClass('gallery__item', item);
+    _wtcUtilityHelpers.default.forEachNode(_this.items, function (index, item) {
+      _wtcUtilityHelpers.default.addClass('gallery__item', item);
 
       item.dataset.index = index;
       item.setAttribute('tabindex', -1);
@@ -201,7 +201,7 @@ function (_ElementController) {
         // "hide" any focusable children on inactive elements
         var focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
 
-        _wtcUtilityHelpers["default"].forEachNode(focusableChildren, function (i, focusable) {
+        _wtcUtilityHelpers.default.forEachNode(focusableChildren, function (i, focusable) {
           focusable.setAttribute('tabindex', -1);
         });
 
@@ -212,9 +212,9 @@ function (_ElementController) {
     }); // add state classes
 
 
-    _wtcUtilityHelpers["default"].addClass('is-active', _this.currentItem);
+    _wtcUtilityHelpers.default.addClass('is-active', _this.currentItem);
 
-    _wtcUtilityHelpers["default"].addClass('is-loading', _this.element); // append main element
+    _wtcUtilityHelpers.default.addClass('is-loading', _this.element); // append main element
 
 
     _this.element.appendChild(_this.overlay); // preload images if any
@@ -223,11 +223,11 @@ function (_ElementController) {
     var images = _this.wrapper.querySelectorAll('img');
 
     if (images.length > 0) {
-      var preloader = new _wtcUtilityPreloader["default"]({
+      var preloader = new _wtcUtilityPreloader.default({
         debug: _this.options.debug
       });
 
-      _wtcUtilityHelpers["default"].forEachNode(images, function (index, item) {
+      _wtcUtilityHelpers.default.forEachNode(images, function (index, item) {
         preloader.add(item.getAttribute('src'), 'image');
       });
 
@@ -252,8 +252,8 @@ function (_ElementController) {
       if (target) {
         var i = +target.dataset.index;
 
-        _wtcUtilityHelpers["default"].forEachNode(this.paginationList.children, function (index, item) {
-          if (i === index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
+        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
+          if (i === index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
         });
 
         this.moveByIndex(i); // shift focus to active item. note this should only happen on pagination click,
@@ -311,7 +311,7 @@ function (_ElementController) {
     value: function resize() {
       var newH = 0;
 
-      _wtcUtilityHelpers["default"].forEachNode(this.items, function (index, item) {
+      _wtcUtilityHelpers.default.forEachNode(this.items, function (index, item) {
         var h = item.offsetHeight;
 
         if (h > newH) {
@@ -333,9 +333,9 @@ function (_ElementController) {
       window.addEventListener('resize', this.resize.bind(this));
       this.resize();
 
-      _wtcUtilityHelpers["default"].removeClass('is-loading', this.element);
+      _wtcUtilityHelpers.default.removeClass('is-loading', this.element);
 
-      _wtcUtilityHelpers["default"].addClass('is-loaded', this.element);
+      _wtcUtilityHelpers.default.addClass('is-loaded', this.element);
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -345,8 +345,8 @@ function (_ElementController) {
         this.prevBtn.setAttribute('disabled', true);
       }
 
-      if (typeof this.onLoad == "function") {
-        return this.onLoad(this);
+      if (typeof this.options.onLoad == "function") {
+        this.options.onLoad(this);
       }
 
       return this;
@@ -360,7 +360,7 @@ function (_ElementController) {
   }, {
     key: "itemTransitioned",
     value: function itemTransitioned(item) {
-      _wtcUtilityHelpers["default"].removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
 
       return this;
     }
@@ -388,17 +388,17 @@ function (_ElementController) {
         this.currentItem.setAttribute('aria-hidden', 'true');
         next.removeAttribute('aria-hidden');
 
-        _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
+        _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
 
-        _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
+        _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
       }
 
       if (this.options.pagination) {
-        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (counter, item) {
+        _wtcUtilityHelpers.default.forEachNode(this.paginationItems, function (counter, item) {
           if (item.dataset.index == index) {
-            _wtcUtilityHelpers["default"].addClass('is-active', item);
+            _wtcUtilityHelpers.default.addClass('is-active', item);
           } else {
-            _wtcUtilityHelpers["default"].removeClass('is-active', item);
+            _wtcUtilityHelpers.default.removeClass('is-active', item);
           }
         });
       }
@@ -449,16 +449,16 @@ function (_ElementController) {
         next = direction ? this.items[0] : this.items[this.items.length - 1];
       }
 
-      _wtcUtilityHelpers["default"].addClass('is-active is-transitioning is-transitioning--center', next);
+      _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
 
-      _wtcUtilityHelpers["default"].removeClass('is-active', this.currentItem);
+      _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
 
       this.currentItem.setAttribute('aria-hidden', 'true');
       next.removeAttribute('aria-hidden');
 
       if (this.options.pagination) {
-        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (index, item) {
-          if (index == next.dataset.index) _wtcUtilityHelpers["default"].addClass('is-active', item);else _wtcUtilityHelpers["default"].removeClass('is-active', item);
+        _wtcUtilityHelpers.default.forEachNode(this.paginationItems, function (index, item) {
+          if (index == next.dataset.index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
         });
       }
 
@@ -500,9 +500,9 @@ function (_ElementController) {
         this.options.onWillChange(this, true);
       }
 
-      _wtcUtilityHelpers["default"].removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
 
-      _wtcUtilityHelpers["default"].addClass('is-transitioning is-transitioning--backward', this.currentItem);
+      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
 
       this.move();
       return this;
@@ -521,9 +521,9 @@ function (_ElementController) {
         this.options.onWillChange(this, false);
       }
 
-      _wtcUtilityHelpers["default"].removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
 
-      _wtcUtilityHelpers["default"].addClass('is-transitioning is-transitioning--forward', this.currentItem);
+      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
 
       this.move(false);
       return this;
@@ -579,9 +579,9 @@ function (_ElementController) {
   }]);
 
   return Gallery;
-}(_wtcControllerElement["default"]);
+}(_wtcControllerElement.default);
 
 _wtcControllerElement.ExecuteControllers.registerController(Gallery, 'Gallery');
 
 var _default = Gallery;
-exports["default"] = _default;
+exports.default = _default;
