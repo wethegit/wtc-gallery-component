@@ -48,9 +48,9 @@ class Gallery extends ElementController {
       dragThreshold: (parseInt(this.element.getAttribute('data-drag-threshold')) > 0) ? parseInt(this.element.getAttribute('data-drag-threshold')) : 40,
       pagination: (this.element.getAttribute('data-pagination') == 'true') ? true : false,
       paginationTarget: (this.element.getAttribute('data-pagination-target') && this.element.getAttribute('data-pagination-target').length > 1) ? this.element.getAttribute('data-pagination-target') : null,
-      nextBtnMarkup: 'Next <span class="visually-hidden">carousel item.</span>',
-      prevBtnMarkup: 'Previous <span class="visually-hidden">carousel item.</span>',
-      liveRegionText: 'Active carousel item',
+      nextBtnMarkup: this.element.getAttribute('data-next-btn-markup') ? this.element.getAttribute('data-next-btn-markup') : 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: this.element.getAttribute('data-prev-btn-markup') ? this.element.getAttribute('data-prev-btn-markup') : 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: this.element.getAttribute('data-live-region-text') ? this.element.getAttribute('data-live-region-text') : 'Active carousel item',
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
