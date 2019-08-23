@@ -470,10 +470,7 @@ function (_ElementController) {
         });
       }
 
-      if (typeof this.options.onHasChanged == "function") {
-        this.options.onHasChanged(next, this.currentItem, this);
-      }
-
+      var prev = this.currentItem;
       this.currentItem = next;
       this.currentIndex = +next.dataset.index;
 
@@ -488,9 +485,13 @@ function (_ElementController) {
         }
       }
 
+      if (typeof this.options.onHasChanged == "function") {
+        this.options.onHasChanged(this.currentItem, prev, this);
+      }
+
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
-      } else {
+      } else if (this.liveRegion && this.options.liveRegionText) {
         this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(this.currentIndex + 1, " of ").concat(this.items.length, ".");
       }
     }

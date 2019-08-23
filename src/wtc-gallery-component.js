@@ -455,10 +455,7 @@ class Gallery extends ElementController {
       });
     }
 
-    if (typeof this.options.onHasChanged == "function") {
-      this.options.onHasChanged(next, this.currentItem, this);
-    }
-
+    const prev = this.currentItem;
     this.currentItem = next;
     this.currentIndex = +next.dataset.index;
 
@@ -473,9 +470,13 @@ class Gallery extends ElementController {
       }
     }
 
+    if (typeof this.options.onHasChanged == "function") {
+      this.options.onHasChanged(this.currentItem, prev, this);
+    }
+
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
-    } else {
+    } else if (this.liveRegion && this.options.liveRegionText) {
       this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${this
         .currentIndex + 1} of ${this.items.length}.`;
     }
