@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _wtcUtilityHelpers = _interopRequireDefault(require("wtc-utility-helpers"));
 
@@ -11,9 +11,9 @@ var _wtcUtilityPreloader = _interopRequireDefault(require("wtc-utility-preloader
 
 var _wtcControllerElement = _interopRequireWildcard(require("wtc-controller-element"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -53,7 +53,7 @@ function (_ElementController) {
    * @param {?HTMLElement} options.paginationTarget - creates a navigation list of gallery items based on the element specified.
    * @param {string} options.nextBtnMarkup - markup to override the default "next button" content
    * @param {string} options.prevBtnMarkup - markup to override the default "previous button" content
-   * @param {string} options.liveRegionText - markup to override the default aria-live region content
+   * @param {string} options.liveRegionText - markup to override the default aria-live region content, use false to disable this
    * @param {function} options.onLoad - function to run once the gallery is loaded
    * @param {function} options.onWillChange - function to run before a gallery transition occurs
    * @param {function} options.onHasChanged - function to run after a gallery transition occurs
@@ -67,51 +67,51 @@ function (_ElementController) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Gallery).call(this, element));
     _this.options = {
-      nav: _this.element.getAttribute('data-nav') == 'true' ? true : false,
-      debug: _this.element.getAttribute('data-debug') == 'true' ? true : false,
-      autoplay: _this.element.getAttribute('data-autoplay') == 'true' ? true : false,
-      delay: parseInt(_this.element.getAttribute('data-delay')) > 0 ? parseInt(_this.element.getAttribute('data-delay')) : 5000,
-      pauseOnHover: _this.element.getAttribute('data-pause-on-hover') == 'true' ? true : false,
-      loop: _this.element.getAttribute('data-loop') == 'true' ? true : false,
-      draggable: _this.element.getAttribute('data-draggable') == 'true' ? true : false,
-      dragThreshold: parseInt(_this.element.getAttribute('data-drag-threshold')) > 0 ? parseInt(_this.element.getAttribute('data-drag-threshold')) : 40,
-      pagination: _this.element.getAttribute('data-pagination') == 'true' ? true : false,
-      paginationTarget: _this.element.getAttribute('data-pagination-target') && _this.element.getAttribute('data-pagination-target').length > 1 ? _this.element.getAttribute('data-pagination-target') : null,
-      nextBtnMarkup: _this.element.getAttribute('data-next-btn-markup') ? _this.element.getAttribute('data-next-btn-markup') : 'Next <span class="visually-hidden">carousel item.</span>',
-      prevBtnMarkup: _this.element.getAttribute('data-prev-btn-markup') ? _this.element.getAttribute('data-prev-btn-markup') : 'Previous <span class="visually-hidden">carousel item.</span>',
-      liveRegionText: _this.element.getAttribute('data-live-region-text') ? _this.element.getAttribute('data-live-region-text') : 'Active carousel item',
+      nav: _this.element.getAttribute("data-nav") == "true" ? true : false,
+      debug: _this.element.getAttribute("data-debug") == "true" ? true : false,
+      autoplay: _this.element.getAttribute("data-autoplay") == "true" ? true : false,
+      delay: parseInt(_this.element.getAttribute("data-delay")) > 0 ? parseInt(_this.element.getAttribute("data-delay")) : 5000,
+      pauseOnHover: _this.element.getAttribute("data-pause-on-hover") == "true" ? true : false,
+      loop: _this.element.getAttribute("data-loop") == "true" ? true : false,
+      draggable: _this.element.getAttribute("data-draggable") == "true" ? true : false,
+      dragThreshold: parseInt(_this.element.getAttribute("data-drag-threshold")) > 0 ? parseInt(_this.element.getAttribute("data-drag-threshold")) : 40,
+      pagination: _this.element.getAttribute("data-pagination") == "true" ? true : false,
+      paginationTarget: _this.element.getAttribute("data-pagination-target") && _this.element.getAttribute("data-pagination-target").length > 1 ? _this.element.getAttribute("data-pagination-target") : null,
+      nextBtnMarkup: _this.element.getAttribute("data-next-btn-markup") ? _this.element.getAttribute("data-next-btn-markup") : 'Next <span class="visually-hidden">carousel item.</span>',
+      prevBtnMarkup: _this.element.getAttribute("data-prev-btn-markup") ? _this.element.getAttribute("data-prev-btn-markup") : 'Previous <span class="visually-hidden">carousel item.</span>',
+      liveRegionText: _this.element.getAttribute("data-live-region-text") ? _this.element.getAttribute("data-live-region-text") : "Active carousel item",
       onLoad: null,
       onWillChange: null,
       onHasChanged: null
     };
 
     if (options) {
-      _this.options = _wtcUtilityHelpers.default.extend(_this.options, options);
+      _this.options = _wtcUtilityHelpers["default"].extend(_this.options, options);
     }
 
-    _this.wrapper = _this.element.querySelector('ul');
+    _this.wrapper = _this.element.querySelector("ul");
     _this.items = _this.wrapper.children;
-    _this.overlay = document.createElement('div');
+    _this.overlay = document.createElement("div");
     _this.currentItem = _this.items[0];
     _this.currentIndex = 0; // If nav is set to true, create buttons
 
     if (_this.options.nav) {
-      _this.nextBtn = document.createElement('button');
+      _this.nextBtn = document.createElement("button");
       _this.nextBtn.innerHTML = _this.options.nextBtnMarkup;
-      _this.prevBtn = document.createElement('button');
+      _this.prevBtn = document.createElement("button");
       _this.prevBtn.innerHTML = _this.options.prevBtnMarkup;
 
-      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-next', _this.nextBtn);
+      _wtcUtilityHelpers["default"].addClass("gallery__nav gallery__nav-next", _this.nextBtn);
 
-      _wtcUtilityHelpers.default.addClass('gallery__nav gallery__nav-prev', _this.prevBtn);
+      _wtcUtilityHelpers["default"].addClass("gallery__nav gallery__nav-prev", _this.prevBtn);
 
-      _this.nextBtn.addEventListener('click', _this.next.bind(_assertThisInitialized(_this)));
+      _this.nextBtn.addEventListener("click", _this.next.bind(_assertThisInitialized(_this)));
 
-      _this.prevBtn.addEventListener('click', _this.prev.bind(_assertThisInitialized(_this)));
+      _this.prevBtn.addEventListener("click", _this.prev.bind(_assertThisInitialized(_this)));
 
-      _this.wrapper.insertAdjacentElement('afterend', _this.nextBtn);
+      _this.wrapper.insertAdjacentElement("afterend", _this.nextBtn);
 
-      _this.wrapper.insertAdjacentElement('afterend', _this.prevBtn);
+      _this.wrapper.insertAdjacentElement("afterend", _this.prevBtn);
     } // If pagination is set to true, set up the item list
 
 
@@ -123,25 +123,25 @@ function (_ElementController) {
         itemList = document.querySelector(_this.options.paginationTarget);
         var items = itemList.children;
 
-        _wtcUtilityHelpers.default.forEachNode(items, function (index, el) {
-          el.classList.add('gallery__pagination-item');
+        _wtcUtilityHelpers["default"].forEachNode(items, function (index, el) {
+          el.classList.add("gallery__pagination-item");
           if (!el.dataset.index) el.dataset.index = index;
-          if (index === 0) el.classList.add('is-active');
-          el.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
+          if (index === 0) el.classList.add("is-active");
+          el.addEventListener("click", _this.handlePagination.bind(_assertThisInitialized(_this)));
         });
       } else {
-        itemList = document.createElement('ul');
+        itemList = document.createElement("ul");
 
-        _wtcUtilityHelpers.default.forEachNode(_this.items, function (index) {
-          var item = document.createElement('li'),
-              itemBtn = document.createElement('button'),
+        _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index) {
+          var item = document.createElement("li"),
+              itemBtn = document.createElement("button"),
               itemBtnContent = document.createTextNode(index);
 
-          _wtcUtilityHelpers.default.addClass('gallery__pagination-item', item);
+          _wtcUtilityHelpers["default"].addClass("gallery__pagination-item", item);
 
           item.dataset.index = index;
-          if (index === 0) item.classList.add('is-active');
-          item.addEventListener('click', _this.handlePagination.bind(_assertThisInitialized(_this)));
+          if (index === 0) item.classList.add("is-active");
+          item.addEventListener("click", _this.handlePagination.bind(_assertThisInitialized(_this)));
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
           itemList.appendChild(item);
@@ -152,83 +152,87 @@ function (_ElementController) {
 
       _this.paginationList = itemList;
       _this.paginationItems = itemList.children;
-      itemList.classList.add('gallery__pagination');
+      itemList.classList.add("gallery__pagination");
     } // create live region for screen-reader to announce slide changes
 
 
-    _this.liveRegion = document.createElement('p');
+    _this.liveRegion = null;
 
-    _this.liveRegion.setAttribute('aria-live', 'polite');
+    if (_this.options.liveRegionText) {
+      _this.liveRegion = document.createElement("p");
 
-    _wtcUtilityHelpers.default.addClass('visually-hidden', _this.liveRegion);
+      _this.liveRegion.setAttribute("aria-live", "polite");
 
-    _this.element.insertAdjacentElement('afterbegin', _this.liveRegion); // Add pause-on-hover pointer events. Including a fallback to mouse events.
+      _wtcUtilityHelpers["default"].addClass("visually-hidden", _this.liveRegion);
+
+      _this.element.insertAdjacentElement("afterbegin", _this.liveRegion);
+    } // Add pause-on-hover pointer events. Including a fallback to mouse events.
 
 
     if (_this.options.pauseOnHover) {
       if (window.PointerEvent) {
-        element.addEventListener('pointerover', _this.pause.bind(_assertThisInitialized(_this)), false);
-        element.addEventListener('pointerout', _this.resume.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener("pointerover", _this.pause.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener("pointerout", _this.resume.bind(_assertThisInitialized(_this)), false);
       } else {
-        element.addEventListener('mouseenter', _this.pause.bind(_assertThisInitialized(_this)), false);
-        element.addEventListener('mouseleave', _this.resume.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener("mouseenter", _this.pause.bind(_assertThisInitialized(_this)), false);
+        element.addEventListener("mouseleave", _this.resume.bind(_assertThisInitialized(_this)), false);
       }
     } // Add "draggable" events
 
 
     if (_this.options.draggable) {
       _this.dragStartX = null;
-      element.addEventListener('mousedown', _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
-      element.addEventListener('touchstart', _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
-      element.addEventListener('mouseup', _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
-      element.addEventListener('touchend', _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener("mousedown", _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener("touchstart", _this.draggablePointerDown.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener("mouseup", _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
+      element.addEventListener("touchend", _this.draggablePointerUp.bind(_assertThisInitialized(_this)), false);
     } // add base classes
 
 
-    _wtcUtilityHelpers.default.addClass('gallery', _this.element);
+    _wtcUtilityHelpers["default"].addClass("gallery", _this.element);
 
-    _wtcUtilityHelpers.default.addClass('gallery__overlay', _this.overlay);
+    _wtcUtilityHelpers["default"].addClass("gallery__overlay", _this.overlay);
 
-    _wtcUtilityHelpers.default.addClass('gallery__wrapper', _this.wrapper);
+    _wtcUtilityHelpers["default"].addClass("gallery__wrapper", _this.wrapper);
 
-    _wtcUtilityHelpers.default.forEachNode(_this.items, function (index, item) {
-      _wtcUtilityHelpers.default.addClass('gallery__item', item);
+    _wtcUtilityHelpers["default"].forEachNode(_this.items, function (index, item) {
+      _wtcUtilityHelpers["default"].addClass("gallery__item", item);
 
       item.dataset.index = index;
-      item.setAttribute('tabindex', -1);
+      item.setAttribute("tabindex", -1);
 
       if (_this.currentIndex !== index) {
         // "hide" any focusable children on inactive elements
-        var focusableChildren = item.querySelectorAll('button, [href], [tabindex]');
+        var focusableChildren = item.querySelectorAll("button, [href], [tabindex]");
 
-        _wtcUtilityHelpers.default.forEachNode(focusableChildren, function (i, focusable) {
-          focusable.setAttribute('tabindex', -1);
+        _wtcUtilityHelpers["default"].forEachNode(focusableChildren, function (i, focusable) {
+          focusable.setAttribute("tabindex", -1);
         });
 
-        item.setAttribute('aria-hidden', 'true');
+        item.setAttribute("aria-hidden", "true");
       }
 
-      item.addEventListener('transitionend', _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
+      item.addEventListener("transitionend", _this.itemTransitioned.bind(_assertThisInitialized(_this), item));
     }); // add state classes
 
 
-    _wtcUtilityHelpers.default.addClass('is-active', _this.currentItem);
+    _wtcUtilityHelpers["default"].addClass("is-active", _this.currentItem);
 
-    _wtcUtilityHelpers.default.addClass('is-loading', _this.element); // append main element
+    _wtcUtilityHelpers["default"].addClass("is-loading", _this.element); // append main element
 
 
     _this.element.appendChild(_this.overlay); // preload images if any
 
 
-    var images = _this.wrapper.querySelectorAll('img');
+    var images = _this.wrapper.querySelectorAll("img");
 
     if (images.length > 0) {
-      var preloader = new _wtcUtilityPreloader.default({
+      var preloader = new _wtcUtilityPreloader["default"]({
         debug: _this.options.debug
       });
 
-      _wtcUtilityHelpers.default.forEachNode(images, function (index, item) {
-        preloader.add(item.getAttribute('src'), 'image');
+      _wtcUtilityHelpers["default"].forEachNode(images, function (index, item) {
+        preloader.add(item.getAttribute("src"), "image");
       });
 
       preloader.load(_this.loaded.bind(_assertThisInitialized(_this)));
@@ -247,13 +251,13 @@ function (_ElementController) {
   _createClass(Gallery, [{
     key: "handlePagination",
     value: function handlePagination(e) {
-      var target = e.target.closest('.gallery__pagination-item');
+      var target = e.target.closest(".gallery__pagination-item");
 
       if (target) {
         var i = +target.dataset.index;
 
-        _wtcUtilityHelpers.default.forEachNode(this.paginationList.children, function (index, item) {
-          if (i === index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationList.children, function (index, item) {
+          if (i === index) _wtcUtilityHelpers["default"].addClass("is-active", item);else _wtcUtilityHelpers["default"].removeClass("is-active", item);
         });
 
         this.moveByIndex(i); // shift focus to active item. note this should only happen on pagination click,
@@ -270,11 +274,11 @@ function (_ElementController) {
   }, {
     key: "draggablePointerDown",
     value: function draggablePointerDown(e) {
-      if (e.target.closest('button')) {
+      if (e.target.closest("button")) {
         return;
       } else {
         e.preventDefault();
-        var xPos = e.clientX || e.touches['0'].clientX;
+        var xPos = e.clientX || e.touches["0"].clientX;
         this.dragStartX = xPos;
       }
     }
@@ -286,11 +290,11 @@ function (_ElementController) {
   }, {
     key: "draggablePointerUp",
     value: function draggablePointerUp(e) {
-      if (e.target.closest('button') || e.target.closest('[href]')) {
+      if (e.target.closest("button") || e.target.closest("[href]")) {
         return;
       } else {
         e.preventDefault();
-        var xPos = e.clientX || e.changedTouches['0'].clientX;
+        var xPos = e.clientX || e.changedTouches["0"].clientX;
 
         if (Math.abs(xPos - this.dragStartX) > this.options.dragThreshold) {
           if (xPos > this.dragStartX) {
@@ -311,7 +315,7 @@ function (_ElementController) {
     value: function resize() {
       var newH = 0;
 
-      _wtcUtilityHelpers.default.forEachNode(this.items, function (index, item) {
+      _wtcUtilityHelpers["default"].forEachNode(this.items, function (index, item) {
         var h = item.offsetHeight;
 
         if (h > newH) {
@@ -330,19 +334,19 @@ function (_ElementController) {
   }, {
     key: "loaded",
     value: function loaded() {
-      window.addEventListener('resize', this.resize.bind(this));
+      window.addEventListener("resize", this.resize.bind(this));
       this.resize();
 
-      _wtcUtilityHelpers.default.removeClass('is-loading', this.element);
+      _wtcUtilityHelpers["default"].removeClass("is-loading", this.element);
 
-      _wtcUtilityHelpers.default.addClass('is-loaded', this.element);
+      _wtcUtilityHelpers["default"].addClass("is-loaded", this.element);
 
       if (this.options.autoplay) {
         this.player = setTimeout(this.next.bind(this), this.options.delay);
       }
 
       if (this.options.nav && !this.options.loop && this.currentIndex == 0) {
-        this.prevBtn.setAttribute('disabled', true);
+        this.prevBtn.setAttribute("disabled", true);
       }
 
       if (typeof this.options.onLoad == "function") {
@@ -360,7 +364,7 @@ function (_ElementController) {
   }, {
     key: "itemTransitioned",
     value: function itemTransitioned(item) {
-      _wtcUtilityHelpers.default.removeClass('is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward', item);
+      _wtcUtilityHelpers["default"].removeClass("is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward", item);
 
       return this;
     }
@@ -380,46 +384,54 @@ function (_ElementController) {
       }
 
       if (!next) {
-        console.warn('No item with index: ' + index);
+        console.warn("No item with index: " + index);
         return;
       }
 
       if (this.currentItem != next) {
-        this.currentItem.setAttribute('aria-hidden', 'true');
-        next.removeAttribute('aria-hidden');
+        this.currentItem.setAttribute("aria-hidden", "true");
+        next.removeAttribute("aria-hidden");
 
-        _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+        _wtcUtilityHelpers["default"].addClass("is-active is-transitioning is-transitioning--center", next);
 
-        _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
+        _wtcUtilityHelpers["default"].removeClass("is-active", this.currentItem);
       }
 
       if (this.options.pagination) {
-        _wtcUtilityHelpers.default.forEachNode(this.paginationItems, function (counter, item) {
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (counter, item) {
           if (item.dataset.index == index) {
-            _wtcUtilityHelpers.default.addClass('is-active', item);
+            _wtcUtilityHelpers["default"].addClass("is-active", item);
           } else {
-            _wtcUtilityHelpers.default.removeClass('is-active', item);
+            _wtcUtilityHelpers["default"].removeClass("is-active", item);
           }
         });
       }
 
-      if (typeof this.options.onHasChanged == "function") {
-        this.options.onHasChanged(next, this.currentItem);
+      if (this.liveRegion && this.options.liveRegionText) {
+        this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(index + 1, " of ").concat(this.items.length, ".");
       }
 
-      this.liveRegion.innerHTML = "".concat(this.options.liveRegionText, ": ").concat(index + 1, " of ").concat(this.items.length, ".");
+      var prev = this.currentItem;
       this.currentItem = next;
       this.currentIndex = index;
 
       if (!this.options.loop) {
         if (this.currentIndex == this.items.length - 1) {
-          this.nextBtn.setAttribute('disabled', true);
+          this.nextBtn.setAttribute("disabled", true);
         } else if (this.currentIndex == 0) {
-          this.prevBtn.setAttribute('disabled', true);
+          this.prevBtn.setAttribute("disabled", true);
         } else {
-          this.nextBtn.removeAttribute('disabled');
-          this.prevBtn.removeAttribute('disabled');
+          this.nextBtn.removeAttribute("disabled");
+          this.prevBtn.removeAttribute("disabled");
         }
+      }
+
+      if (typeof this.options.onHasChanged == "function") {
+        this.options.onHasChanged({
+          current: this.currentItem,
+          previous: prev,
+          index: this.currentIndex
+        });
       }
 
       if (this.options.autoplay) {
@@ -449,16 +461,16 @@ function (_ElementController) {
         next = direction ? this.items[0] : this.items[this.items.length - 1];
       }
 
-      _wtcUtilityHelpers.default.addClass('is-active is-transitioning is-transitioning--center', next);
+      _wtcUtilityHelpers["default"].addClass("is-active is-transitioning is-transitioning--center", next);
 
-      _wtcUtilityHelpers.default.removeClass('is-active', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass("is-active", this.currentItem);
 
-      this.currentItem.setAttribute('aria-hidden', 'true');
-      next.removeAttribute('aria-hidden');
+      this.currentItem.setAttribute("aria-hidden", "true");
+      next.removeAttribute("aria-hidden");
 
       if (this.options.pagination) {
-        _wtcUtilityHelpers.default.forEachNode(this.paginationItems, function (index, item) {
-          if (index == next.dataset.index) _wtcUtilityHelpers.default.addClass('is-active', item);else _wtcUtilityHelpers.default.removeClass('is-active', item);
+        _wtcUtilityHelpers["default"].forEachNode(this.paginationItems, function (index, item) {
+          if (index == next.dataset.index) _wtcUtilityHelpers["default"].addClass("is-active", item);else _wtcUtilityHelpers["default"].removeClass("is-active", item);
         });
       }
 
@@ -471,12 +483,12 @@ function (_ElementController) {
 
       if (!this.options.loop) {
         if (this.currentIndex == this.items.length - 1) {
-          this.nextBtn.setAttribute('disabled', true);
+          this.nextBtn.setAttribute("disabled", true);
         } else if (this.currentIndex == 0) {
-          this.prevBtn.setAttribute('disabled', true);
+          this.prevBtn.setAttribute("disabled", true);
         } else {
-          this.nextBtn.removeAttribute('disabled');
-          this.prevBtn.removeAttribute('disabled');
+          this.nextBtn.removeAttribute("disabled");
+          this.prevBtn.removeAttribute("disabled");
         }
       }
 
@@ -500,9 +512,9 @@ function (_ElementController) {
         this.options.onWillChange(this, true);
       }
 
-      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass("is-transitioning--center", this.currentItem);
 
-      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--backward', this.currentItem);
+      _wtcUtilityHelpers["default"].addClass("is-transitioning is-transitioning--backward", this.currentItem);
 
       this.move();
       return this;
@@ -521,9 +533,9 @@ function (_ElementController) {
         this.options.onWillChange(this, false);
       }
 
-      _wtcUtilityHelpers.default.removeClass('is-transitioning--center', this.currentItem);
+      _wtcUtilityHelpers["default"].removeClass("is-transitioning--center", this.currentItem);
 
-      _wtcUtilityHelpers.default.addClass('is-transitioning is-transitioning--forward', this.currentItem);
+      _wtcUtilityHelpers["default"].addClass("is-transitioning is-transitioning--forward", this.currentItem);
 
       this.move(false);
       return this;
@@ -579,9 +591,9 @@ function (_ElementController) {
   }]);
 
   return Gallery;
-}(_wtcControllerElement.default);
+}(_wtcControllerElement["default"]);
 
-_wtcControllerElement.ExecuteControllers.registerController(Gallery, 'Gallery');
+_wtcControllerElement.ExecuteControllers.registerController(Gallery, "Gallery");
 
 var _default = Gallery;
-exports.default = _default;
+exports["default"] = _default;
