@@ -427,11 +427,7 @@ function (_ElementController) {
       }
 
       if (typeof this.options.onHasChanged == "function") {
-        this.options.onHasChanged({
-          current: this.currentItem,
-          previous: prev,
-          index: this.currentIndex
-        });
+        this.options.onHasChanged(this.currentItem, prev, this);
       }
 
       if (this.options.autoplay) {
@@ -475,7 +471,7 @@ function (_ElementController) {
       }
 
       if (typeof this.options.onHasChanged == "function") {
-        this.options.onHasChanged(next, this.currentItem);
+        this.options.onHasChanged(next, this.currentItem, this);
       }
 
       this.currentItem = next;
