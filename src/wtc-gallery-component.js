@@ -400,7 +400,7 @@ class Gallery extends ElementController {
     this.currentItem = next;
     this.currentIndex = index;
 
-    if (!this.options.loop) {
+    if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
       } else if (this.currentIndex == 0) {
@@ -457,7 +457,7 @@ class Gallery extends ElementController {
     this.currentItem = next;
     this.currentIndex = +next.dataset.index;
 
-    if (!this.options.loop) {
+    if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
       } else if (this.currentIndex == 0) {
