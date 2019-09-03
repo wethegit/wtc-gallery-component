@@ -80,9 +80,7 @@ class Gallery extends ElementController {
       onHasChanged: null
     };
 
-    if (options) {
-      this.options = _u.extend(this.options, options);
-    }
+    if (options) this.options = Object.assign({}, this.options, options);
 
     this.wrapper = this.element.querySelector("ul");
     this.items = this.wrapper.children;

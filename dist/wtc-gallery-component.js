@@ -84,11 +84,7 @@ function (_ElementController) {
       onWillChange: null,
       onHasChanged: null
     };
-
-    if (options) {
-      _this.options = _wtcUtilityHelpers["default"].extend(_this.options, options);
-    }
-
+    if (options) _this.options = Object.assign({}, _this.options, options);
     _this.wrapper = _this.element.querySelector("ul");
     _this.items = _this.wrapper.children;
     _this.overlay = document.createElement("div");
