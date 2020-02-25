@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WTC Gallery Component</title>
+    <link rel="stylesheet" href="./wtc-gallery-component.scss" />
+
+    <style>
+      /* CUSTOM STYLES */
+      .gallery {
+        margin: auto;
+        max-width: 600px;
+        width: 100%;
+      }
+
+      .gallery__item::before {
+        content: "";
+        display: block;
+        padding-top: 56%;
+      }
+      .gallery__item span {
+        font-size: 200px;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+
+      .custom-pager {
+        display: -webkit-box;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .gallery__pagination-item button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 15px;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: -webkit-transform 0.07s ease;
+        transition: -webkit-transform 0.07s ease;
+        transition: transform 0.07s ease;
+        transition: transform 0.07s ease, -webkit-transform 0.07s ease;
+      }
+      .gallery__pagination-item:hover button,
+      .gallery__pagination-item.is-active button {
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="gallery"
+      data-nav="true"
+      data-pagination="true"
+      data-pagination-target=".custom-pager"
+    >
+      <ul aria-label="Carousel">
+        <li><span>😍</span></li>
+        <li><span>💩</span></li>
+        <li><span>🎃</span></li>
+        <li><span>🔫</span></li>
+        <li><span>🐼</span></li>
+        <li><span>🦊</span></li>
+        <li><span>🤖</span></li>
+      </ul>
+
+      <ul class="custom-pager" aria-label="Carousel Navigation">
+        <li><button>😍</button></li>
+        <li><button>💩</button></li>
+        <li><button>🎃</button></li>
+        <li><button>🔫</button></li>
+        <li><button>🐼</button></li>
+        <li><button>🦊</button></li>
+        <li><button>🤖</button></li>
+      </ul>
+    </div>
+
+    <script src="./wtc-gallery-component.js"></script>
+    <script>
+      {
+        const galleryComponent = window.Gallery.default,
+          element = document.querySelector(".gallery");
+        new galleryComponent(element);
+      }
+    </script>
+  </body>
+</html>

@@ -1,31 +1,48 @@
 # wtc-gallery-component
+
 A minimal, touch-enabled content switcher, with options for autoplay, pagination, and more.
 
 ## Install
+
+yarn:
+
+```sh
+$ yarn add wtc-gallery-component
+```
+
+npm:
+
 ```sh
 $ npm install wtc-gallery-component
 ```
 
 ## Usage
+
 Import it into your project.
+
 ```javascript
-import Gallery from 'wtc-gallery-component';
+import Gallery from "wtc-gallery-component";
 ```
 
-Include the stylesheet if desired (found in the `dist/` folder).
+Include the stylesheet if desired. This can be found in the `dist/` folder, or you can import it directly into your stylesheet:
+
+```scss
+@import "~wtc-gallery-component";
+```
 
 Add your markup.
+
 ```html
 <div data-nav="true">
   <ul>
     <li>
-      <img src="./assets/img/image.jpg" alt="">
+      <img src="./assets/img/image.jpg" alt="" />
     </li>
     <li>
-      <img src="./assets/img/image2.jpg" alt="">
+      <img src="./assets/img/image2.jpg" alt="" />
     </li>
     <li>
-      <img src="./assets/img/image3.jpg" alt="">
+      <img src="./assets/img/image3.jpg" alt="" />
     </li>
   </ul>
 </div>
@@ -34,27 +51,33 @@ Add your markup.
 You now have 2 options to initalize the component.
 
 ### 1. Using ExecuteControllers
-If you are using [wtc-controller-element] just add **data-controller="Gallery"** to your markup.
+
+If you are using [wtc-controller-element] just add **data-controller="Gallery"** to your markup, and ensure that `ExecuteControllers.instanciateAll()` is being called somewhere globally.
+
 ```html
 <div data-nav="true" data-controller="Gallery">
   <ul>
     <li>
-      <img src="./assets/img/image.jpg" alt="">
+      <img src="./assets/img/image.jpg" alt="" />
     </li>
     ...
   </ul>
 </div>
 ```
-You can also instanciate explicitly:
+
+You can also instantiate the component explicitly:
+
 ```javascript
-ExecuteControllers.instanciate(document.getElementById('gallery'), Gallery);
+ExecuteControllers.instanciate(document.getElementById("gallery"), Gallery);
 ```
 
 ### 2. Default JS
+
 With the default JS version, you have the option to pass the options as an object, or use data-attributes—they both work.  
 If you choose to pass the options to the instance, you get a few extra hooks: `onLoad`, `onWillChange`, and `onHasChanged`.
+
 ```javascript
-let gallery = new Gallery(document.getElementById('gallery'), {
+let gallery = new Gallery(document.getElementById("gallery"), {
   nav: true,
   autoplay: true,
   delay: 5000,
@@ -65,31 +88,36 @@ let gallery = new Gallery(document.getElementById('gallery'), {
 ```
 
 ## Options
+
 There are many more options you can pass in to the component:
-  - `nav`: Boolean. Toggles next/previous buttons. Defaults to `false`.
-  - `autoplay`: Boolean. Auto-starts the gallery transitions. Defaults to `false`.
-  - `delay`: Number. The delay (in milliseconds) between gallery item transitions. Defaults to `5000`.
-  - `pauseOnHover`: Boolean. Pauses autoplay when a pointing device is within the gallery area. Defaults to `false`.
-  - `loop`: Boolean. Enables left or right navigation, when the user reaches the first or last gallery item, respectively. Defaults to `false`.
-  - `draggable`: Boolean. Allows for a basic swipe/drag to advance gallery items. Defaults to `false`.
-  - `dragThreshold`: Number. Minimum pixel amount for a drag action to advance the slideshow. Defaults to `40` pixels.
-  - `pagination`: Boolean. Sets up a navigation list of the gallery items. If `paginationTarget` (below) is specified, you can pass in your own list of elements to use; otherwise a bare bones list will be set up for you. Defaults to `false`.
-  - `paginationTarget`: HTMLElement. Integrates an element from your markup (an unordered list, for example) to use as navigation for the gallery items. Pagination items will be created from the immediate children of the given element. Defaults to `null`.
-  - `nextBtnMarkup`: String. Markup to override the default "next button" content. This must be passed in via the `options` object, as opposed to a data-attribute.
-  - `prevBtnMarkup`: String. Markup to override the default "previous button" content. This must be passed in via the `options` object, as opposed to a data-attribute.
-  - `liveRegionText`: String. Markup to override the default aria-live region content. This must be passed in via the `options` object, as opposed to a data-attribute.
-  - **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN NOT USING ExecuteControllers:**
-  - `onLoad`: Function. Fires after all images were preloaded, and the gallery is initiated.
-  - `onWillChange`: Function. Fires before a gallery transition.
-  - `onHasChanged`: Function. Fires after a gallery transition.
+
+- `nav`: Boolean. Toggles next/previous buttons. Defaults to `false`.
+- `autoplay`: Boolean. Auto-starts the gallery transitions. Defaults to `false`.
+- `delay`: Number. The delay (in milliseconds) between gallery item transitions. Defaults to `5000`.
+- `pauseOnHover`: Boolean. Pauses autoplay when a pointing device is within the gallery area. Defaults to `false`.
+- `loop`: Boolean. Enables left or right navigation, when the user reaches the first or last gallery item, respectively. Defaults to `false`.
+- `draggable`: Boolean. Allows for a basic swipe/drag to advance gallery items. Defaults to `false`.
+- `dragThreshold`: Number. Minimum pixel amount for a drag action to advance the slideshow. Defaults to `40` pixels.
+- `pagination`: Boolean. Sets up a navigation list of the gallery items. If `paginationTarget` (below) is specified, you can pass in your own list of elements to use; otherwise a bare bones list will be set up for you. Defaults to `false`.
+- `paginationTarget`: HTMLElement. Integrates an element from your markup (an unordered list, for example) to use as navigation for the gallery items. Pagination items will be created from the immediate children of the given element. Defaults to `null`.
+- `nextBtnMarkup`: String. Markup to override the default "next button" content.
+- `prevBtnMarkup`: String. Markup to override the default "previous button" content.
+- `liveRegionText`: String. Markup to override the default aria-live region content.
+- **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN USING THE `new` KEYWORD TO INSTANTIATE:**
+- `onLoad`: Function. Fires after all images were preloaded, and the gallery is initiated.
+- `onWillChange`: Function. Fires before a gallery transition.
+- `onHasChanged`: Function. Fires after a gallery transition.
 
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
-For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`
+For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`. It does not matter where in the markup this element is; if you're using multiple Galleries, give your pagination items unique classes or IDs.
 
 ## Customize!
+
 The following example uses custom pagination, as well as some other nifty options:
+
 ```html
-<div data-controller="Gallery"
+<div
+  data-controller="Gallery"
   data-nav="true"
   data-autoplay="true"
   data-delay="6000"
@@ -101,17 +129,17 @@ The following example uses custom pagination, as well as some other nifty option
 >
   <ul>
     <li>
-      <img src="./assets/img/image1.jpg" alt="">
+      <img src="./assets/img/image1.jpg" alt="" />
     </li>
     <li>
-      <img src="./assets/img/image2.jpg" alt="">
+      <img src="./assets/img/image2.jpg" alt="" />
     </li>
     <li>
-      <img src="./assets/img/image3.jpg" alt="">
+      <img src="./assets/img/image3.jpg" alt="" />
     </li>
   </ul>
 
-  <!-- A custom pagination element requires the same amount of sub-items as the number of gallery items. -->
+  <!-- A custom pagination element should have the same amount of sub-items as the number of gallery items. -->
   <ul class="my-custom-pagination">
     <li>
       Item 1 🐼 (could be an image, more markup… could be anything!)
@@ -127,9 +155,15 @@ The following example uses custom pagination, as well as some other nifty option
 ```
 
 ## Caveats
+
 Please note that this controller should never be stored in an immutable data structure, as doing so can lead to memory leaks due to method bindings within event listeners.
 
-[wtc-controller-element]:https://github.com/wethegit/wtc-controller-element
+### To-do:
+
+Add a destroy method to un-bind any listeners, per the above caveat.
+
+[wtc-controller-element]: https://github.com/wethegit/wtc-controller-element
 
 ## Documentation
+
 Documentation can be found [here](https://wethegit.github.io/wtc-gallery-component/Gallery.html)

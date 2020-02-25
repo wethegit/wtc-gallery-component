@@ -5,10 +5,9 @@
   "main": "dist/wtc-gallery-component.js",
   "style": "dist/wtc-gallery-component.css",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src/ --presets @babel/preset-env --out-dir dist",
-    "build-es5": "npx webpack --config webpack.config.js",
-    "prepublish": "npm run build && npm run build-es5"
+    "start": "parcel src/index.html --out-dir dev/  --global Gallery",
+    "document": "./node_modules/.bin/jsdoc src/wtc-gallery-component.js --destination ./docs/",
+    "build": "rm -rf dist/; parcel build src/wtc-gallery-component.js src/wtc-gallery-component.scss"
   },
   "repository": {
     "type": "git",
@@ -24,15 +23,21 @@
   },
   "homepage": "https://github.com/wethegit/wtc-gallery-component#readme",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "webpack": "^4.28.1",
-    "webpack-cli": "^3.2.1",
-    "babel-loader": "^8.0.5"
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jsdoc": "^3.6.3",
+    "prettier": "^1.17.1",
+    "sass": "^1.26.0",
+    "stylelint-config-prettier": "^5.2.0",
+    "stylelint-formatter-pretty": "^1.0.3",
+    "stylelint-order": "^3.0.0",
+    "stylelint-prettier": "^1.1.1",
+    "stylelint-scss": "^3.8.0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.0",
+    "parcel": "^1.12.4",
     "wtc-controller-element": "^1.0.7",
     "wtc-utility-helpers": "^1.1.2",
     "wtc-utility-preloader": "^1.0.2"
