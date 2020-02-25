@@ -27,14 +27,13 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
+    "babel-loader": "^8.0.5",
     "webpack": "^4.28.1",
-    "webpack-cli": "^3.2.1",
-    "babel-loader": "^8.0.5"
+    "webpack-cli": "^3.2.1"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
     "wtc-controller-element": "^1.0.7",
-    "wtc-utility-helpers": "^1.1.2",
     "wtc-utility-preloader": "^1.0.2"
   }
 }
