@@ -82,7 +82,7 @@ class Gallery extends ElementController {
     if (options) this.options = Object.assign({}, this.options, options);
 
     this.wrapper = this.element.querySelector("ul");
-    this.items = this.wrapper.children;
+    this.items = [...this.wrapper.children];
     this.overlay = document.createElement("div");
     this.currentItem = this.items[0];
     this.currentIndex = 0;
@@ -112,9 +112,9 @@ class Gallery extends ElementController {
       // otherwise, build a generic list of buttons
       if (this.options.paginationTarget) {
         itemList = document.querySelector(this.options.paginationTarget);
-        let items = itemList.children;
+        let items = [...itemList.children];
 
-        items.forEach((element, index) => {
+        items.forEach((el, index) => {
           el.classList.add("gallery__pagination-item");
           if (!el.dataset.index) el.dataset.index = index;
           if (index === 0) el.classList.add("is-active");
@@ -132,8 +132,8 @@ class Gallery extends ElementController {
             itemBtnContent = document.createTextNode(i);
 
           item.classList.add("gallery__pagination-item");
-          item.dataset.index = index;
-          if (index === 0) item.classList.add("is-active");
+          item.dataset.index = i;
+          if (i === 0) item.classList.add("is-active");
           item.addEventListener("click", this.handlePagination.bind(this));
 
           itemBtn.appendChild(itemBtnContent);
@@ -145,7 +145,7 @@ class Gallery extends ElementController {
       }
 
       this.paginationList = itemList;
-      this.paginationItems = itemList.children;
+      this.paginationItems = [...this.paginationList.children];
       itemList.classList.add("gallery__pagination");
     }
 
@@ -255,7 +255,7 @@ class Gallery extends ElementController {
     if (target) {
       let i = +target.dataset.index;
 
-      this.paginationList.children.forEach((item, index) => {
+      this.paginationItems.forEach((item, index) => {
         if (i === index) item.classList.add("is-active");
         else item.classList.remove("is-active");
       });
