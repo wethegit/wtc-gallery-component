@@ -114,10 +114,10 @@ class Gallery extends ElementController {
         itemList = document.querySelector(this.options.paginationTarget);
         let items = [...itemList.children];
 
-        items.forEach((el, index) => {
+        items.forEach((el, i) => {
           el.classList.add("gallery__pagination-item");
-          if (!el.dataset.index) el.dataset.index = index;
-          if (index === 0) el.classList.add("is-active");
+          if (!el.dataset.index) el.dataset.index = i;
+          if (i === 0) el.classList.add("is-active");
           el.addEventListener("click", this.handlePagination.bind(this));
         });
       } else {
@@ -129,7 +129,7 @@ class Gallery extends ElementController {
         for (i; i < length; i++) {
           let item = document.createElement("li"),
             itemBtn = document.createElement("button"),
-            itemBtnContent = document.createTextNode(i);
+            itemBtnContent = document.createTextNode(i + 1);
 
           item.classList.add("gallery__pagination-item");
           item.dataset.index = i;
@@ -200,12 +200,12 @@ class Gallery extends ElementController {
     this.overlay.classList.add("gallery__overlay");
     this.wrapper.classList.add("gallery__wrapper");
 
-    this.items.forEach((item, index) => {
+    this.items.forEach((item, i) => {
       item.classList.add("gallery__item");
-      item.dataset.index = index;
+      item.dataset.index = i;
       item.setAttribute("tabindex", -1);
 
-      if (this.currentIndex !== index) {
+      if (this.currentIndex !== i) {
         // "hide" any focusable children on inactive elements
         let focusableChildren = item.querySelectorAll(
           "button, [href], [tabindex]"
@@ -253,13 +253,13 @@ class Gallery extends ElementController {
   handlePagination(e) {
     let target = e.target.closest(".gallery__pagination-item");
     if (target) {
-      let i = +target.dataset.index;
+      let paginationIndex = +target.dataset.index;
 
-      this.paginationItems.forEach((item, index) => {
-        if (i === index) item.classList.add("is-active");
+      this.paginationItems.forEach((item, i) => {
+        if (paginationIndex === i) item.classList.add("is-active");
         else item.classList.remove("is-active");
       });
-      this.moveByIndex(i);
+      this.moveByIndex(paginationIndex);
 
       // shift focus to active item. note this should only happen on pagination click,
       // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
@@ -454,8 +454,8 @@ class Gallery extends ElementController {
     next.removeAttribute("aria-hidden");
 
     if (this.options.pagination) {
-      this.paginationItems.forEach((item, index) => {
-        if (index == next.dataset.index) item.classList.add("is-active");
+      this.paginationItems.forEach((item, i) => {
+        if (i == next.dataset.index) item.classList.add("is-active");
         else item.classList.remove("is-active");
       });
     }
