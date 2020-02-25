@@ -94,8 +94,8 @@ class Gallery extends ElementController {
       this.prevBtn = document.createElement("button");
       this.prevBtn.innerHTML = this.options.prevBtnMarkup;
 
-      this.nextBtn.classList.add("gallery__nav gallery__nav-next");
-      this.prevBtn.classList.add("gallery__nav gallery__nav-prev");
+      this.nextBtn.className = "gallery__nav gallery__nav-next";
+      this.prevBtn.className = "gallery__nav gallery__nav-prev";
 
       this.nextBtn.addEventListener("click", this.next.bind(this));
       this.prevBtn.addEventListener("click", this.prev.bind(this));
@@ -353,10 +353,10 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   itemTransitioned(item) {
-    item.classList.remove(
-      "is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward"
-    );
-
+    item.classList.remove("is-transitioning");
+    item.classList.remove("is-transitioning--center");
+    item.classList.remove("is-transitioning--backward");
+    item.classList.remove("is-transitioning--forward");
     return this;
   }
 
@@ -380,7 +380,9 @@ class Gallery extends ElementController {
     if (this.currentItem != next) {
       this.currentItem.setAttribute("aria-hidden", "true");
       next.removeAttribute("aria-hidden");
-      next.classList.add("is-active is-transitioning is-transitioning--center");
+      next.classList.add("is-active");
+      next.classList.add("is-transitioning");
+      next.classList.add("is-transitioning--center");
       this.currentItem.classList.remove("is-active");
     }
 
@@ -443,7 +445,9 @@ class Gallery extends ElementController {
       next = direction ? this.items[0] : this.items[this.items.length - 1];
     }
 
-    next.classList.add("is-active is-transitioning is-transitioning--center");
+    next.classList.add("is-active");
+    next.classList.add("is-transitioning");
+    next.classList.add("is-transitioning--center");
     this.currentItem.classList.remove("is-active");
 
     this.currentItem.setAttribute("aria-hidden", "true");
@@ -495,9 +499,8 @@ class Gallery extends ElementController {
     }
 
     this.currentItem.classList.remove("is-transitioning--center");
-    this.currentItem.classList.add(
-      "is-transitioning is-transitioning--backward"
-    );
+    this.currentItem.classList.add("is-transitioning");
+    this.currentItem.classList.add("is-transitioning--backward");
 
     this.move();
 
@@ -516,9 +519,8 @@ class Gallery extends ElementController {
     }
 
     this.currentItem.classList.remove("is-transitioning--center");
-    this.currentItem.classList.add(
-      "is-transitioning is-transitioning--forward"
-    );
+    this.currentItem.classList.add("is-transitioning");
+    this.currentItem.classList.add("is-transitioning--forward");
 
     this.move(false);
 
