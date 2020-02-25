@@ -2,22 +2,22 @@
   position: relative;
 
   .visually-hidden {
-    position: absolute;
-    overflow: hidden;
+    border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
-    width: 1px;
     margin: -1px;
+    overflow: hidden;
     padding: 0;
-    border: 0;
+    position: absolute;
+    width: 1px;
   }
 
   &.is-loading {
     .gallery__wrapper {
-      padding-bottom: 50%;
-      overflow: hidden;
       height: 0;
       opacity: 0;
+      overflow: hidden;
+      padding-bottom: 50%;
     }
 
     .gallery__overlay {
@@ -28,40 +28,40 @@
 }
 
 .gallery__wrapper {
-  transition: opacity 0.4s ease;
-  position: relative;
-  width: 100%;
   margin: 0;
   padding: 0;
+  position: relative;
+  transition: opacity 0.4s ease;
+  width: 100%;
 }
 
 .gallery__item {
-  transition: opacity 0.4s ease;
-  transform: scale(0.9) translateY(-50%);
   display: block;
+  left: 0;
+  opacity: 0;
   position: absolute;
   top: 50%;
-  left: 0;
+  transform: scale(0.9) translateY(-50%);
+  transition: opacity 0.4s ease;
   width: 100%;
-  opacity: 0;
 
   &.is-transitioning {
     transition: transform 0.6s ease, opacity 0.6s ease;
   }
 
   &.is-transitioning--backward {
-    transform: translate(-50%, -50%) rotate(-20deg);
     opacity: 0;
+    transform: translate(-50%, -50%) rotate(-20deg);
   }
 
   &.is-transitioning--forward {
-    transform: translate(50%, -50%) rotate(20deg);
     opacity: 0;
+    transform: translate(50%, -50%) rotate(20deg);
   }
 
   &.is-active {
-    transform: scale(1) translateY(-50%);
     opacity: 1;
+    transform: scale(1) translateY(-50%);
 
     /* focusable child elements */
     button,
@@ -85,40 +85,40 @@
 }
 
 .gallery__overlay {
-  transition: opacity 0.4s ease;
   background-color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
+  left: 0;
   opacity: 0;
   pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.4s ease;
+  width: 100%;
 }
 
 .gallery__overlay::after {
-  content: "";
   animation: galleryPreloader 1s ease infinite;
+  background-color: black;
+  border-radius: 50%;
+  content: "";
+  height: 40px;
+  left: 50%;
+  margin: -20px 0 0 -20px;
   position: absolute;
   top: 50%;
-  left: 50%;
   width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  border-radius: 50%;
-  background-color: black;
 }
 
 .gallery__nav {
   appearance: none;
-  width: 60px;
-  height: 60px;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.7);
-  transform: translateY(-50%);
+  height: 60px;
   position: absolute;
   top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
 
   &:hover {
     cursor: pointer;
