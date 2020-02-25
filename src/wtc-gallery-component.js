@@ -460,8 +460,6 @@ class Gallery extends ElementController {
     this.currentIndex = +next.dataset.index;
 
     if (!this.options.loop && this.options.nav) {
-      console.log(this.currentIndex);
-
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
         this.prevBtn.removeAttribute("disabled");
