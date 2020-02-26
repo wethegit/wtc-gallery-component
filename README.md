@@ -2,6 +2,10 @@
 
 A minimal, touch-enabled content switcher, with options for autoplay, pagination, and more.
 
+## ⚠️ Warning:
+
+Version 1.4.0 is currently unstable, and should not be used until this message is removed! Please use version `~1.3.10` in your `package.json` files. \*\*
+
 ## Install
 
 yarn:
