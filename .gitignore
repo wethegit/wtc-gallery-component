@@ -1,6 +1,7 @@
 .DS_Store
 .cache
 .sass-cache
+.cache
 **/*/.sass-cache
 **/*/.sass-cache
 *.sublime-project
