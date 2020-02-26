@@ -27,11 +27,11 @@
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "jsdoc": "^3.6.3",
+    "parcel": "^1.12.4",
     "prettier": "^1.17.1",
     "sass": "^1.26.0"
   },
   "dependencies": {
-    "parcel": "^1.12.4",
     "wtc-controller-element": "^1.0.7",
     "wtc-utility-helpers": "^1.1.2",
     "wtc-utility-preloader": "^1.0.2"
