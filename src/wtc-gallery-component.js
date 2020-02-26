@@ -408,8 +408,10 @@ class Gallery extends ElementController {
     if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
+        this.prevBtn.removeAttribute("disabled");
       } else if (this.currentIndex == 0) {
         this.prevBtn.setAttribute("disabled", true);
+        this.nextBtn.removeAttribute("disabled");
       } else {
         this.nextBtn.removeAttribute("disabled");
         this.prevBtn.removeAttribute("disabled");
@@ -467,8 +469,10 @@ class Gallery extends ElementController {
     if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
+        this.prevBtn.removeAttribute("disabled");
       } else if (this.currentIndex == 0) {
         this.prevBtn.setAttribute("disabled", true);
+        this.nextBtn.removeAttribute("disabled");
       } else {
         this.nextBtn.removeAttribute("disabled");
         this.prevBtn.removeAttribute("disabled");
