@@ -2,10 +2,6 @@
 
 A minimal, touch-enabled content switcher, with options for autoplay, pagination, and more.
 
-## ⚠️ Warning:
-
-Version 1.4.0 is currently unstable, and should not be used until this message is removed! Please use version `~1.3.10` in your `package.json` files. \*\*
-
 ## Install
 
 yarn:
@@ -171,3 +167,11 @@ Add a destroy method to un-bind any listeners, per the above caveat.
 ## Documentation
 
 Documentation can be found [here](https://wethegit.github.io/wtc-gallery-component/Gallery.html)
+
+## Development
+
+When developing or debugging features in this library, you can use the `index.html` file found in the `dist/` directory to test your changes. Please run the following to get a working build though, as the index.html file depends on the dist files:
+
+```sh
+$ npm run build
+```

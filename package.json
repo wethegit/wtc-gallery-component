@@ -11,7 +11,7 @@
     "minify-js": "uglifyjs build/wtc-gallery-component.js --compress --output dist/wtc-gallery-component.min.js",
     "minify-css": "postcss build/wtc-gallery-component.css --no-map --use autoprefixer -d dist/",
     "prebuild": "npm run prebuild-js && npm rum prebuild-css",
-    "build": "rm -rf dist/ && rm -rf build/ && npm run prebuild && webpack --config webpack.config.js && npm run minify-js && npm run minify-css",
+    "build": "rm -rf build/ && npm run prebuild && webpack --config webpack.config.js && npm run minify-js && npm run minify-css",
     "prepare": "npm run document && npm run build"
   },
   "repository": {

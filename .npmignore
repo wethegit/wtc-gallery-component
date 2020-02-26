@@ -2,3 +2,5 @@ src/
 build/
 .vscode/
 docs/
+
+dist/index.html
