@@ -3822,11 +3822,6 @@ wtc-controller-element@^1.0.7:
   resolved "https://registry.yarnpkg.com/wtc-controller-element/-/wtc-controller-element-1.1.1.tgz#9b6233d9a5343ef942e778e77f7bd73b4403a103"
   integrity sha512-QmHUAjppVUCyo8fbkF9ngZBBjjhEWgjJRBDcgwqoU3Ngd4EL4m0nT7exTQ7OIyu+eUweSUv0o3O+Q7M73g2Rkg==
 
-wtc-utility-helpers@^1.1.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/wtc-utility-helpers/-/wtc-utility-helpers-1.3.2.tgz#519166e882b282f1732067d15fcc6b79666afac0"
-  integrity sha512-APuWttPiRhThqk53++fCg9scwvWe5T/hPxPmdMFDcOqfbxvwZjQNVPWdD3i8zKA/+WL3wRW9CVYgUsId9OffNw==
-
 wtc-utility-preloader@^1.0.2:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/wtc-utility-preloader/-/wtc-utility-preloader-1.0.5.tgz#7fd63862f00c7a04c08255edc779df3147101e1d"
