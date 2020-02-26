@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WTC Gallery Component</title>
-    <link rel="stylesheet" href="./wtc-gallery-component.scss" />
+    <link rel="stylesheet" href="./wtc-gallery-component.css" />
 
     <style>
       /* CUSTOM STYLES */
@@ -86,13 +86,11 @@
       </ul>
     </div>
 
-    <script src="./wtc-gallery-component.js"></script>
+    <script src="./wtc-gallery-component.es5.js"></script>
     <script>
-      {
-        const galleryComponent = window.Gallery.default,
-          element = document.querySelector(".gallery");
-        new galleryComponent(element);
-      }
+      const Gallery = window.WTCGalleryComponent.default;
+      const element = document.querySelector(".gallery");
+      new Gallery(element);
     </script>
   </body>
 </html>
