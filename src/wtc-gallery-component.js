@@ -8,7 +8,6 @@
  * @created Nov 30, 2016
  */
 
-import _u from "wtc-utility-helpers";
 import Preloader from "wtc-utility-preloader";
 import {
   default as ElementController,
@@ -83,7 +82,7 @@ class Gallery extends ElementController {
     if (options) this.options = Object.assign({}, this.options, options);
 
     this.wrapper = this.element.querySelector("ul");
-    this.items = this.wrapper.children;
+    this.items = [...this.wrapper.children];
     this.overlay = document.createElement("div");
     this.currentItem = this.items[0];
     this.currentIndex = 0;
@@ -95,8 +94,8 @@ class Gallery extends ElementController {
       this.prevBtn = document.createElement("button");
       this.prevBtn.innerHTML = this.options.prevBtnMarkup;
 
-      _u.addClass("gallery__nav gallery__nav-next", this.nextBtn);
-      _u.addClass("gallery__nav gallery__nav-prev", this.prevBtn);
+      this.nextBtn.className = "gallery__nav gallery__nav-next";
+      this.prevBtn.className = "gallery__nav gallery__nav-prev";
 
       this.nextBtn.addEventListener("click", this.next.bind(this));
       this.prevBtn.addEventListener("click", this.prev.bind(this));
@@ -113,37 +112,40 @@ class Gallery extends ElementController {
       // otherwise, build a generic list of buttons
       if (this.options.paginationTarget) {
         itemList = document.querySelector(this.options.paginationTarget);
-        let items = itemList.children;
+        let items = [...itemList.children];
 
-        _u.forEachNode(items, (index, el) => {
+        items.forEach((el, i) => {
           el.classList.add("gallery__pagination-item");
-          if (!el.dataset.index) el.dataset.index = index;
-          if (index === 0) el.classList.add("is-active");
+          if (!el.dataset.index) el.dataset.index = i;
+          if (i === 0) el.classList.add("is-active");
           el.addEventListener("click", this.handlePagination.bind(this));
         });
       } else {
+        let i = 0,
+          length = this.items.length;
+
         itemList = document.createElement("ul");
 
-        _u.forEachNode(this.items, index => {
+        for (i; i < length; i++) {
           let item = document.createElement("li"),
             itemBtn = document.createElement("button"),
-            itemBtnContent = document.createTextNode(index);
+            itemBtnContent = document.createTextNode(i + 1);
 
-          _u.addClass("gallery__pagination-item", item);
-          item.dataset.index = index;
-          if (index === 0) item.classList.add("is-active");
+          item.classList.add("gallery__pagination-item");
+          item.dataset.index = i;
+          if (i === 0) item.classList.add("is-active");
           item.addEventListener("click", this.handlePagination.bind(this));
 
           itemBtn.appendChild(itemBtnContent);
           item.appendChild(itemBtn);
           itemList.appendChild(item);
-        });
+        }
 
         this.element.appendChild(itemList);
       }
 
       this.paginationList = itemList;
-      this.paginationItems = itemList.children;
+      this.paginationItems = [...this.paginationList.children];
       itemList.classList.add("gallery__pagination");
     }
 
@@ -152,7 +154,7 @@ class Gallery extends ElementController {
     if (this.options.liveRegionText) {
       this.liveRegion = document.createElement("p");
       this.liveRegion.setAttribute("aria-live", "polite");
-      _u.addClass("visually-hidden", this.liveRegion);
+      this.liveRegion.classList.add("visually-hidden");
       this.element.insertAdjacentElement("afterbegin", this.liveRegion);
     }
 
@@ -194,23 +196,24 @@ class Gallery extends ElementController {
     }
 
     // add base classes
-    _u.addClass("gallery", this.element);
-    _u.addClass("gallery__overlay", this.overlay);
-    _u.addClass("gallery__wrapper", this.wrapper);
+    this.element.classList.add("gallery");
+    this.overlay.classList.add("gallery__overlay");
+    this.wrapper.classList.add("gallery__wrapper");
 
-    _u.forEachNode(this.items, (index, item) => {
-      _u.addClass("gallery__item", item);
-      item.dataset.index = index;
+    this.items.forEach((item, i) => {
+      item.classList.add("gallery__item");
+      item.dataset.index = i;
       item.setAttribute("tabindex", -1);
 
-      if (this.currentIndex !== index) {
+      if (this.currentIndex !== i) {
         // "hide" any focusable children on inactive elements
         let focusableChildren = item.querySelectorAll(
           "button, [href], [tabindex]"
         );
-        _u.forEachNode(focusableChildren, (i, focusable) => {
-          focusable.setAttribute("tabindex", -1);
-        });
+
+        for (let focusableEl of focusableChildren) {
+          focusableEl.setAttribute("tabindex", -1);
+        }
 
         item.setAttribute("aria-hidden", "true");
       }
@@ -222,8 +225,8 @@ class Gallery extends ElementController {
     });
 
     // add state classes
-    _u.addClass("is-active", this.currentItem);
-    _u.addClass("is-loading", this.element);
+    this.currentItem.classList.add("is-active");
+    this.element.classList.add("is-loading");
 
     // append main element
     this.element.appendChild(this.overlay);
@@ -233,9 +236,9 @@ class Gallery extends ElementController {
     if (images.length > 0) {
       let preloader = new Preloader({ debug: this.options.debug });
 
-      _u.forEachNode(images, (index, item) => {
+      for (let item of images) {
         preloader.add(item.getAttribute("src"), "image");
-      });
+      }
 
       preloader.load(this.loaded.bind(this));
     } else {
@@ -250,12 +253,13 @@ class Gallery extends ElementController {
   handlePagination(e) {
     let target = e.target.closest(".gallery__pagination-item");
     if (target) {
-      let i = +target.dataset.index;
-      _u.forEachNode(this.paginationList.children, (index, item) => {
-        if (i === index) _u.addClass("is-active", item);
-        else _u.removeClass("is-active", item);
+      let paginationIndex = +target.dataset.index;
+
+      this.paginationItems.forEach((item, i) => {
+        if (paginationIndex === i) item.classList.add("is-active");
+        else item.classList.remove("is-active");
       });
-      this.moveByIndex(i);
+      this.moveByIndex(paginationIndex);
 
       // shift focus to active item. note this should only happen on pagination click,
       // not on next/prev click https://www.w3.org/WAI/tutorials/carousels/functionality/#announce-the-current-item
@@ -305,12 +309,12 @@ class Gallery extends ElementController {
   resize() {
     let newH = 0;
 
-    _u.forEachNode(this.items, (index, item) => {
+    for (let item of this.items) {
       let h = item.offsetHeight;
       if (h > newH) {
         newH = h;
       }
-    });
+    }
 
     this.wrapper.style.height = `${newH}px`;
 
@@ -325,8 +329,8 @@ class Gallery extends ElementController {
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
 
-    _u.removeClass("is-loading", this.element);
-    _u.addClass("is-loaded", this.element);
+    this.element.classList.remove("is-loading");
+    this.element.classList.add("is-loaded");
 
     if (this.options.autoplay) {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -349,11 +353,10 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   itemTransitioned(item) {
-    _u.removeClass(
-      "is-transitioning is-transitioning--center is-transitioning--backward is-transitioning--forward",
-      item
-    );
-
+    item.classList.remove("is-transitioning");
+    item.classList.remove("is-transitioning--center");
+    item.classList.remove("is-transitioning--backward");
+    item.classList.remove("is-transitioning--forward");
     return this;
   }
 
@@ -377,18 +380,20 @@ class Gallery extends ElementController {
     if (this.currentItem != next) {
       this.currentItem.setAttribute("aria-hidden", "true");
       next.removeAttribute("aria-hidden");
-      _u.addClass("is-active is-transitioning is-transitioning--center", next);
-      _u.removeClass("is-active", this.currentItem);
+      next.classList.add("is-active");
+      next.classList.add("is-transitioning");
+      next.classList.add("is-transitioning--center");
+      this.currentItem.classList.remove("is-active");
     }
 
     if (this.options.pagination) {
-      _u.forEachNode(this.paginationItems, (counter, item) => {
+      for (let item of this.paginationItems) {
         if (item.dataset.index == index) {
-          _u.addClass("is-active", item);
+          item.classList.add("is-active");
         } else {
-          _u.removeClass("is-active", item);
+          item.classList.remove("is-active");
         }
-      });
+      }
     }
 
     if (this.liveRegion && this.options.liveRegionText) {
@@ -403,8 +408,10 @@ class Gallery extends ElementController {
     if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
+        this.prevBtn.removeAttribute("disabled");
       } else if (this.currentIndex == 0) {
         this.prevBtn.setAttribute("disabled", true);
+        this.nextBtn.removeAttribute("disabled");
       } else {
         this.nextBtn.removeAttribute("disabled");
         this.prevBtn.removeAttribute("disabled");
@@ -440,16 +447,18 @@ class Gallery extends ElementController {
       next = direction ? this.items[0] : this.items[this.items.length - 1];
     }
 
-    _u.addClass("is-active is-transitioning is-transitioning--center", next);
-    _u.removeClass("is-active", this.currentItem);
+    next.classList.add("is-active");
+    next.classList.add("is-transitioning");
+    next.classList.add("is-transitioning--center");
+    this.currentItem.classList.remove("is-active");
 
     this.currentItem.setAttribute("aria-hidden", "true");
     next.removeAttribute("aria-hidden");
 
     if (this.options.pagination) {
-      _u.forEachNode(this.paginationItems, (index, item) => {
-        if (index == next.dataset.index) _u.addClass("is-active", item);
-        else _u.removeClass("is-active", item);
+      this.paginationItems.forEach((item, i) => {
+        if (i == next.dataset.index) item.classList.add("is-active");
+        else item.classList.remove("is-active");
       });
     }
 
@@ -460,8 +469,10 @@ class Gallery extends ElementController {
     if (!this.options.loop && this.options.nav) {
       if (this.currentIndex == this.items.length - 1) {
         this.nextBtn.setAttribute("disabled", true);
+        this.prevBtn.removeAttribute("disabled");
       } else if (this.currentIndex == 0) {
         this.prevBtn.setAttribute("disabled", true);
+        this.nextBtn.removeAttribute("disabled");
       } else {
         this.nextBtn.removeAttribute("disabled");
         this.prevBtn.removeAttribute("disabled");
@@ -491,11 +502,9 @@ class Gallery extends ElementController {
       this.options.onWillChange(this, true);
     }
 
-    _u.removeClass("is-transitioning--center", this.currentItem);
-    _u.addClass(
-      "is-transitioning is-transitioning--backward",
-      this.currentItem
-    );
+    this.currentItem.classList.remove("is-transitioning--center");
+    this.currentItem.classList.add("is-transitioning");
+    this.currentItem.classList.add("is-transitioning--backward");
 
     this.move();
 
@@ -513,8 +522,9 @@ class Gallery extends ElementController {
       this.options.onWillChange(this, false);
     }
 
-    _u.removeClass("is-transitioning--center", this.currentItem);
-    _u.addClass("is-transitioning is-transitioning--forward", this.currentItem);
+    this.currentItem.classList.remove("is-transitioning--center");
+    this.currentItem.classList.add("is-transitioning");
+    this.currentItem.classList.add("is-transitioning--forward");
 
     this.move(false);
 
