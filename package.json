@@ -7,7 +7,8 @@
   "scripts": {
     "start": "parcel src/index.html --out-dir dev/  --global Gallery",
     "document": "./node_modules/.bin/jsdoc src/wtc-gallery-component.js --destination ./docs/",
-    "build": "rm -rf dist/; parcel build src/wtc-gallery-component.js src/wtc-gallery-component.scss --no-source-maps"
+    "build": "rm -rf dist/; parcel build src/wtc-gallery-component.js src/wtc-gallery-component.scss --no-source-maps",
+    "prepare": "yarn build"
   },
   "repository": {
     "type": "git",
