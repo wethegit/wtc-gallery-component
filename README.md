@@ -167,3 +167,11 @@ Add a destroy method to un-bind any listeners, per the above caveat.
 ## Documentation
 
 Documentation can be found [here](https://wethegit.github.io/wtc-gallery-component/Gallery.html)
+
+## Development
+
+When developing or debugging features in this library, you can use the `index.html` file found in the `dist/` directory to test your changes. Please run the following to get a working build though, as the index.html file depends on the dist files:
+
+```sh
+$ npm run build
+```

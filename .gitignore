@@ -20,8 +20,5 @@ bower_components
 *.log
 **/*/*.log
 
-dev
-pub
-deploy
-lib/
-.vscode
+.vscode/
+build/

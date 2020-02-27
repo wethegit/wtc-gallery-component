@@ -1,2 +1,6 @@
 src/
-.vscode
+build/
+.vscode/
+docs/
+
+dist/index.html
