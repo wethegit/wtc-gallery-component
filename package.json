@@ -14,6 +14,21 @@
     "build": "rm -rf build/ && npm run prebuild && webpack --config webpack.config.js && npm run minify-js && npm run minify-css",
     "prepare": "npm run document && npm run build"
   },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint 'src/**/*.js'",
+      "git add"
+    ],
+    "src/**/*.scss": [
+      "stylelint 'src/**/*.scss' --syntax scss --config .stylelintrc.yaml",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wethegit/wtc-gallery-component.git"
@@ -33,9 +48,21 @@
     "@babel/preset-env": "^7.8.4",
     "autoprefixer": "^9.7.4",
     "babel-loader": "^8.0.6",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^4.2.3",
     "jsdoc": "^3.6.3",
+    "lint-staged": "^10.0.8",
     "node-sass": "^4.13.1",
     "postcss-cli": "^7.1.0",
+    "prettier": "^1.17.1",
+    "stylelint": "^13.2.0",
+    "stylelint-config-prettier": "^8.0.1",
+    "stylelint-formatter-pretty": "^2.0.0",
+    "stylelint-order": "^4.0.0",
+    "stylelint-prettier": "^1.1.2",
+    "stylelint-scss": "^3.14.2",
     "uglify-js": "^3.8.0",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11"
