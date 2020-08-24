@@ -82,8 +82,12 @@ let gallery = new Gallery(document.getElementById("gallery"), {
   autoplay: true,
   delay: 5000,
   onLoad: null,
-  onWillChange: null,
-  onHasChanged: null
+  onWillChange: function(instance, direction) {
+    // run some code before a slide change
+  },
+  onHasChanged: function(currentItem, previousItem, instance) {
+    // run some code after a slide change
+  },
 });
 ```
 
@@ -105,8 +109,8 @@ There are many more options you can pass in to the component:
 - `liveRegionText`: String. Markup to override the default aria-live region content.
 - **THE FOLLOWING OPTIONS ARE ONLY AVAILABLE WHEN USING THE `new` KEYWORD TO INSTANTIATE:**
 - `onLoad`: Function. Fires after all images were preloaded, and the gallery is initiated.
-- `onWillChange`: Function. Fires before a gallery transition.
-- `onHasChanged`: Function. Fires after a gallery transition.
+- `onWillChange`: Function. Fires before a gallery transition event happens. Accepts two parameters: `instance` and `direction` (direction will be `true` or `false`, based on whether it's next or previous).
+- `onHasChanged`: Function. Fires immediately after the transition event happens (does not wait for animations). Accepts three parameters: `currentItem`, `previousItem`, and `instance`.
 
 If setting options via data-attributes in the markup, change camelCase to kebab-case. For example, `pauseOnHover` would become `data-pause-on-hover`.
 For custom pagination, a valid CSS selector is needed—i.e. `data-pagination-target=".my-custom-pagination"`. It does not matter where in the markup this element is; if you're using multiple Galleries, give your pagination items unique classes or IDs.
