@@ -4,14 +4,6 @@ A minimal, touch-enabled content switcher, with options for autoplay, pagination
 
 ## Install
 
-yarn:
-
-```sh
-$ yarn add wtc-gallery-component
-```
-
-npm:
-
 ```sh
 $ npm install wtc-gallery-component
 ```
