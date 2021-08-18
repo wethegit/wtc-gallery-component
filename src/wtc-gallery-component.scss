@@ -62,6 +62,7 @@
   &.is-active {
     opacity: 1;
     transform: scale(1) translateY(-50%);
+    z-index: 1;
 
     /* focusable child elements */
     button,
