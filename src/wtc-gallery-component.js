@@ -322,6 +322,38 @@ class Gallery extends ElementController {
   }
 
   /**
+   * Handles the setting of the timer for autoplay galleries,
+   * taking into consideration the document's visibility state.
+   */
+  handleAutoplay() {
+    if (!this.options.autoplay) return;
+
+    if (document.visibilityState === "hidden") {
+      this.pause();
+      document.addEventListener(
+        "visibilitychange",
+        this.handleVisibilityChange.bind(this)
+      );
+    } else {
+      this.player = setTimeout(this.next.bind(this), this.options.delay);
+    }
+  }
+
+  /**
+   * Fires when the document's visbility chnages from the "hidden" state;
+   * Resumes autoplay functionality if applicable.
+   */
+  handleVisibilityChange() {
+    if (!this.options.autoplay || document.visibilityState === "hidden") return;
+
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange.bind(this)
+    );
+    this.handleAutoplay();
+  }
+
+  /**
    * Removes loading classes and starts autoplay.
    * @return {class} This
    */
@@ -332,9 +364,7 @@ class Gallery extends ElementController {
     this.element.classList.remove("is-loading");
     this.element.classList.add("is-loaded");
 
-    if (this.options.autoplay) {
-      this.player = setTimeout(this.next.bind(this), this.options.delay);
-    }
+    if (this.options.autoplay) this.handleAutoplay();
 
     if (this.options.nav && !this.options.loop && this.currentIndex == 0) {
       this.prevBtn.setAttribute("disabled", true);
@@ -422,9 +452,7 @@ class Gallery extends ElementController {
       this.options.onHasChanged(this.currentItem, prev, this);
     }
 
-    if (this.options.autoplay) {
-      this.player = setTimeout(this.next.bind(this), this.options.delay);
-    }
+    if (this.options.autoplay) this.handleAutoplay();
 
     return this;
   }
@@ -484,7 +512,7 @@ class Gallery extends ElementController {
     }
 
     if (this.options.autoplay) {
-      this.player = setTimeout(this.next.bind(this), this.options.delay);
+      this.handleAutoplay();
     } else if (this.liveRegion && this.options.liveRegionText) {
       this.liveRegion.innerHTML = `${this.options.liveRegionText}: ${this
         .currentIndex + 1} of ${this.items.length}.`;
@@ -564,9 +592,7 @@ class Gallery extends ElementController {
    * @return {class} This.
    */
   resume() {
-    if (this.options.autoplay) {
-      this.player = setTimeout(this.next.bind(this), this.options.delay);
-    }
+    if (this.options.autoplay) this.handleAutoplay();
 
     return this;
   }
