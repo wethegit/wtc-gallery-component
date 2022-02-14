@@ -87,6 +87,9 @@ class Gallery extends ElementController {
     this.currentItem = this.items[0];
     this.currentIndex = 0;
 
+    // Bind event listeners
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+
     // If nav is set to true, create buttons
     if (this.options.nav) {
       this.nextBtn = document.createElement("button");
@@ -332,7 +335,7 @@ class Gallery extends ElementController {
       this.pause();
       document.addEventListener(
         "visibilitychange",
-        this.handleVisibilityChange.bind(this)
+        this.handleVisibilityChange
       );
     } else {
       this.player = setTimeout(this.next.bind(this), this.options.delay);
@@ -348,7 +351,7 @@ class Gallery extends ElementController {
 
     document.removeEventListener(
       "visibilitychange",
-      this.handleVisibilityChange.bind(this)
+      this.handleVisibilityChange
     );
     this.handleAutoplay();
   }
