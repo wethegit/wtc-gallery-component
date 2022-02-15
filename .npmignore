@@ -2,5 +2,6 @@ src/
 build/
 .vscode/
 docs/
+.github/
 
 dist/index.html
