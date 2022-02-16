@@ -171,3 +171,4 @@ When developing or debugging features in this library, you can use the `index.ht
 ```sh
 $ npm run build
 ```
+.
