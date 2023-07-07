@@ -57,7 +57,7 @@
     "node-sass": "^7.0.0",
     "postcss-cli": "^7.1.0",
     "prettier": "^1.17.1",
-    "stylelint": "^13.2.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-prettier": "^8.0.1",
     "stylelint-formatter-pretty": "^2.0.0",
     "stylelint-order": "^4.0.0",
